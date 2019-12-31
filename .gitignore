@@ -4,4 +4,3 @@ dist
 *.log
 yarn.lock
 .env
-firebase-config.json
