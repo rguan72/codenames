@@ -8,6 +8,8 @@
   "rules": {
     "no-console": "off",
     "comma-dangle": "off",
+    "quotes": ["error", "double"],
+    "arrow-parens": "off",
     "react/jsx-filename-extension": "off"
   }
 }

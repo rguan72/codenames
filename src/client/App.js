@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import './app.css';
-import ReactImage from './react.png';
-import firebase from './Firebase';
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import AppBar from "@material-ui/core/AppBar";
+import "./app.css";
+import { makeStyles } from "@material-ui/core/styles";
+import Home from "./Home";
+import Lobby from "./Lobby";
+import Board from "./components/board";
+
+const useStyles = makeStyles(() => ({
+  bar: {
+    fontSize: 30,
+    padding: 20,
+    backgroundColor: "#7c134d",
+    fontFamily: "Roboto",
+  },
+  theme: {
+    fontFamily: "sans-serif"
+  }
+}));
 
 export default function App() {
-  const [username, setUsername] = useState(null);
-  const [status, setStatus] = useState(null);
-
-  useEffect(() => {
-    fetch('/api/getUsername')
-      .then(res => res.json())
-      .then(user => setUsername(user.username));
-    firebase
-      .database()
-      .ref('status')
-      .on('value', (snapshot) => {
-        setStatus(snapshot.val());
-      });
-  });
-
+  const classes = useStyles();
   return (
     <div>
-      {username ? (
-        <h1>{`Hello ${username}`}</h1>
-      ) : (
-        <h1>Loading.. please wait!</h1>
-      )}
-      {status ? (
-        <p>
-          {' '}
-          {`You are ${status}`}
-          {' '}
-        </p>
-      ) : (
-        <p>Loading... please wait!</p>
-      )}
-      <img src={ReactImage} alt="react" />
+      <AppBar position="static" className={classes.bar}>
+        Codenames
+      </AppBar>
+      <Router>
+        <Route exact path="/" component={Home} />
+        <Route path="/lobby/:code" component={Lobby} />
+        <Route path="/game" component={Board} />
+      </Router>
     </div>
   );
 }

@@ -2,7 +2,15 @@ h1 {
   color: green;
 }
 
-body {
-  text-align: center;
+/* body {
+  text-align: left;
   margin: auto;
+  max-width: 100%;
+  overflow-x: hidden;
+} */
+
+html,
+body {
+  margin: auto;
+  width: 100%;
 }
