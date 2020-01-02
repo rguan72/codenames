@@ -1,11 +1,11 @@
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
-import "./app.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Home from "./Home";
 import Lobby from "./Lobby";
-import Board from "./components/board";
+import Guesser from "./Guesser";
+import "./app.css";
 
 const useStyles = makeStyles(() => ({
   bar: {
@@ -29,7 +29,7 @@ export default function App() {
       <HashRouter>
         <Route exact path="/" component={Home} />
         <Route path="/lobby/:code" component={Lobby} />
-        <Route path="/game" component={Board} />
+        <Route path="/game" component={Guesser} />
       </HashRouter>
     </div>
   );

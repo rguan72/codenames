@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import Box from "@material-ui/core/Box";
 import GameCard from "./card";
 
 export default function Board() {
-  const [cards, setCards] = useState(Array(20).fill(false));
-  // render a bunch of cards
   return (
     <div>
       <Box>
-        <Box flexDirection="row" component="span">
+        <Box flexDirection="row">
           <GameCard type="RED" name="field" />
           <GameCard type="BEIGE" name="axle" />
         </Box>
