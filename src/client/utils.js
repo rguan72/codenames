@@ -1,4 +1,5 @@
-import firebase from "./Firebase";
+import firebase from "firebase/app";
+import firebase_ from "./Firebase";
 import { wordList } from "./wordList";
 import { teams, roles } from "./constants";
 
@@ -15,22 +16,27 @@ function genCode() {
 }
 
 function addPlayer(gameCode, name) {
-  const db = firebase.firestore();
-  console.log(firebase.firestore);
-  db.collection("players")
+  const db = firebase_.firestore();
+  return db.collection("players")
     .add({
       name,
       gameCode,
       team: teams.RED,
       role: roles.SPYMASTER,
+      ready: false,
       created: Date.now()
     })
-    .then(ref => db
-      .collection("games")
-      .doc(gameCode)
-      .update({
-        players: firebase.firestore.FieldValue.arrayUnion(ref.id)
-      }));
+    .then(ref => {
+      db
+        .collection("games")
+        .doc(gameCode)
+        .update({
+          players: firebase.firestore.FieldValue.arrayUnion(ref.id),
+          numPlayers: firebase.firestore.FieldValue.increment(1),
+        });
+      return ref.id;
+    })
+    .catch(err => console.log(err));
 }
 
 function addWords(gameCode, redTurn) {
@@ -39,7 +45,7 @@ function addWords(gameCode, redTurn) {
     const idx = Math.floor(Math.random() * 673);
     if (arr.indexOf(idx) === -1) arr.push(idx);
   }
-  const db = firebase.firestore();
+  const db = firebase_.firestore();
   const wordHashes = [];
   const promises = [];
   promises.push(
@@ -103,26 +109,26 @@ function addWords(gameCode, redTurn) {
       })
       .then(ref => wordHashes.push(ref.id))
   );
-  Promise.all(promises).then(() => db
+  return Promise.all(promises).then(() => db
     .collection("games")
     .doc(gameCode)
-    .set({ words: wordHashes }, { merge: true }));
+    .set({ words: wordHashes }, { merge: true })).catch(err => console.log(err));
 }
 
 function createGame(name) {
-  const db = firebase.firestore();
+  const db = firebase_.firestore();
   let newCode = false;
   const gameCode = genCode();
   //   while (!newCode) {
   const docRef = db.collection("games").doc(gameCode);
   const redTurn = Math.random() > 0.5;
   docRef.get().then(doc => {
-    if (!doc.exists || doc.data.active === false) {
+    if (!doc.exists || doc.data().active === false) {
       docRef.set({
         redTurn,
         created: Date.now(),
         numReady: 0,
-        numPlayers: 1,
+        numPlayers: 0,
         active: true,
         players: []
       });
@@ -130,10 +136,40 @@ function createGame(name) {
     }
   });
   addWords(gameCode, redTurn);
-  //   addPlayer(gameCode, name);
-  return gameCode;
+  return addPlayer(gameCode, name)
+    .then(id => ({ gameCode, id }))
+    .catch(err => console.log(err));
+}
+
+function checkValid(gameCode) {
+  const db = firebase_.firestore();
+  return db
+    .collection("games")
+    .doc(gameCode)
+    .get()
+    .then(doc => doc.exists)
+    .catch(err => console.log(err));
+}
+
+function getLobbySnap(gameCode) {
+  const db = firebase_.firestore();
+  return db
+    .collection("games")
+    .doc(gameCode)
+    .onSnapshot(doc => { doc.data().players; })
+    .then(players => {
+      const promises = [];
+      for (let i = 0; i < players.length; i += 1) {
+        promises.push(db
+          .collection("players")
+          .doc(players[i])
+          .onSnapshot(doc => doc.data()));
+      }
+      return Promise.all(promises);
+    })
+    .catch(err => console.log(err));
 }
 
 export {
-  genCode, addPlayer, addWords, createGame
+  genCode, addPlayer, addWords, createGame, checkValid, getLobbySnap
 };

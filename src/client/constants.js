@@ -12,7 +12,7 @@ const types = {
 
 const roles = {
   SPYMASTER: "spymaster",
-  GUESSER: "gueser"
+  OPERATIVE: "operative"
 };
 
 export { teams, roles, types };

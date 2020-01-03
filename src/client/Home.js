@@ -26,15 +26,13 @@ const useStyles = makeStyles(() => ({
   left30: {
     marginLeft: 30
   },
-  nonamehide: {
-    visibility: props => (props.name === "" ? "visible" : "hidden")
-  }
 }));
 
 
 export default function Home() {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [pid, setPID] = useState("");
   const [done, setDone] = useState(false);
   const props = { name };
   const classes = useStyles(props);
@@ -53,13 +51,19 @@ export default function Home() {
         <Button
           variant="contained"
           size="large"
-          onClick={() => { setCode(createGame(name)); setDone(true); }}
+          onClick={() => {
+            createGame(name).then(res => {
+              setCode(res.gameCode);
+              setPID(res.id);
+              setDone(true);
+            });
+          }}
           className={classes.button}
           disabled={name === ""}
         >
           New Game
         </Button>
-        <Link to="/game">
+        <Link to={{ pathname: "/join", name }}>
           <Button
             variant="contained"
             size="large"
@@ -70,9 +74,13 @@ export default function Home() {
           </Button>
         </Link>
       </Box>
-      <Typography className={`${classes.left30} ${classes.nonamehide}`}>
+      {name === ""
+      && (
+      <Typography variant="h6" className={`${classes.left30} ${classes.nonamehide}`}>
         Please set your name!
       </Typography>
+      )
+      }
     </div>
-  ) : <Redirect to={`/lobby/${code}`} />;
+  ) : <Redirect to={{ pathname: `/lobby/${code}/${pid}` }} />;
 }

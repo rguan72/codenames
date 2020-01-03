@@ -4,7 +4,8 @@ import AppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Home from "./Home";
 import Lobby from "./Lobby";
-import Guesser from "./Guesser";
+import Operative from "./Operative";
+import Join from "./Join";
 import "./app.css";
 
 const useStyles = makeStyles(() => ({
@@ -28,8 +29,10 @@ export default function App() {
       </AppBar>
       <HashRouter>
         <Route exact path="/" component={Home} />
-        <Route path="/lobby/:code" component={Lobby} />
-        <Route path="/game" component={Guesser} />
+        <Route path="/lobby/:code/:id" component={Lobby} />
+        <Route path="/operative/:code/:id" component={Operative} />
+        <Route path="/spymaster/:code/:id" component={Operative} />
+        <Route path="/join" component={Join} />
       </HashRouter>
     </div>
   );

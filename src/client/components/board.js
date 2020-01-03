@@ -1,20 +1,29 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import GameCard from "./card";
 
+const useStyles = makeStyles({
+  marTop: {
+    marginTop: 70,
+  },
+  marBot: {
+    marginBottom: 70,
+  }
+});
+
 export default function Board() {
+  const classes = useStyles();
   return (
-    <div>
-      <Box>
-        <Box flexDirection="row">
-          <GameCard type="RED" name="field" />
-          <GameCard type="BEIGE" name="axle" />
-        </Box>
-        <Box flexDirection="row">
-          <GameCard type="BLACK" name="cool" />
-          <GameCard type="BLUE" name="bros" />
-        </Box>
+    <Box>
+      <Box className={classes.marBot}>
+        <GameCard type="RED" name="field" />
+        <GameCard type="BEIGE" name="axle" />
       </Box>
-    </div>
+      <Box className={classes.marTop}>
+        <GameCard type="BLACK" name="cool" />
+        <GameCard type="BLUE" name="bros" />
+      </Box>
+    </Box>
   );
 }
