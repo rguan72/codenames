@@ -179,7 +179,11 @@ function monitorWords(gameCode, setWords) {
     .where("gameCode", "==", gameCode)
     .onSnapshot((querySnapshot) => {
       const words = [];
-      querySnapshot.forEach(doc => words.push(doc.data()));
+      querySnapshot.forEach(doc => {
+        const withId = doc.data();
+        withId.id = doc.id;
+        words.push(withId);
+      });
       setWords(words);
     });
 }
