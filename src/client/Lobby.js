@@ -10,6 +10,7 @@ import Switch from "@material-ui/core/Switch";
 import Player from "./components/player";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
+import { monitorPlayers } from "./utils";
 
 const useStyles = makeStyles(() => ({
   margin: {
@@ -36,30 +37,10 @@ export default function Lobby(props) {
   const [allReady, setAllReady] = useState(false);
   const { id, code } = props.match.params;
 
-  function monitorLobby() {
-    const db = firebase_.firestore();
-    db.collection("games")
-      .doc(code)
-      .onSnapshot((doc) => {
-        if (!doc.exists) { return; }
-        const promises = [];
-        const playerSnap = doc.data().players;
-        for (let i = 0; i < playerSnap.length; i += 1) {
-          promises.push(
-            db
-              .collection("players")
-              .doc(playerSnap[i])
-              .get()
-              .then(pdoc => { const withId = pdoc.data(); withId.id = pdoc.id; return withId; })
-              .catch(err => console.log(err))
-          );
-        }
-        Promise.all(promises).then(arr => {
-          setAllReady(arr.length > 3 && arr.map(pl => pl.ready).every(isReady => isReady));
-          return setPlayers(arr);
-        });
-      });
-  }
+  useEffect(() => {
+    const unsubscribe = monitorPlayers(code, setPlayers);
+    return () => unsubscribe();
+  }, []);
 
   function setPlayerTeam(selTeam) {
     const db = firebase_.firestore();
@@ -81,8 +62,6 @@ export default function Lobby(props) {
       .doc(id)
       .update({ ready: selReady });
   }
-
-  useEffect(() => { monitorLobby(); });
 
   const playerItems = players.map(player => (
     <Box m={4} mt={2} key={player.id}>
@@ -149,7 +128,7 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={`/${role}/${code}/${id}`} style={{ textDecoration: "none" }}>
+        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team } }} style={{ textDecoration: "none" }}>
           {/* disabled={!allReady} */}
           <Button variant="contained">Start</Button>
         </Link>

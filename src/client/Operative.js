@@ -5,18 +5,28 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Board from "./components/board";
-import {
-  monitorWords, wordComp, monitorPlayer, monitorGame
-} from "./utils";
+import { monitorWords } from "./utils";
 import { teams } from "./constants";
+import firebase_ from "./Firebase";
 
 export default function Operative(props) {
-  const [words, setWords] = useState([]);
-  const [player, setPlayer] = useState(null);
+  const [words, setWords] = useState(Array(20).fill(null));
   const [myTurn, setMyTurn] = useState(false);
   const { id, code } = props.match.params;
-  useEffect(() => { monitorWords(code).then(data => { data.sort(wordComp); setWords(data); }); });
-  useEffect(() => { monitorPlayer(id).then(data => setPlayer(data)); }, []);
+  const { team } = props.location.state;
+  useEffect(() => {
+    const unsubscribe = monitorWords(code, setWords);
+    return () => unsubscribe();
+  }, []);
+  useEffect(() => {
+    const db = firebase_.firestore();
+    const unsubscribe = db.collection("games").doc(code).onSnapshot((docRef) => {
+      const data = docRef.data();
+      setMyTurn((team === teams.RED && data.redTurn)
+        || (team === teams.BLUE && !data.redTurn));
+    });
+    return () => unsubscribe();
+  }, []);
   const settings = {
     dots: true,
     infinite: true,
@@ -25,18 +35,10 @@ export default function Operative(props) {
     slidesToScroll: 1,
     arrows: true
   };
-  useEffect(() => {
-    if (player !== null) {
-      monitorGame(code).then(
-        data => setMyTurn((player.team === teams.RED && data.redTurn))
-      || (player.team === teams.BLUE && !data.redTurn)
-      );
-    }
-  });
   return (
     <div>
       <Box display="flex" justifyContent="center" mt={2}>
-        <FontAwesomeIcon icon="user-secret" color="red" size="2x" />
+        <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
       </Box>
       <Slider {...settings}>
         <Board words={words.slice(0, 4)} code={code} disabled={!myTurn} />

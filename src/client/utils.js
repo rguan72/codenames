@@ -62,6 +62,7 @@ function addWords(gameCode, redTurn) {
         value: wordList[arr[0]],
         type: "BLACK",
         flipped: false,
+        gameCode,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(ref => wordHashes.push(ref.id))
@@ -74,6 +75,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "BEIGE",
           flipped: false,
+          gameCode,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
@@ -87,6 +89,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "RED",
           flipped: false,
+          gameCode,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
@@ -100,6 +103,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "BLUE",
           flipped: false,
+          gameCode,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
@@ -112,6 +116,7 @@ function addWords(gameCode, redTurn) {
         value: wordList[arr[19]],
         type: redTurn ? "RED" : "BLUE",
         flipped: false,
+        gameCode,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(ref => wordHashes.push(ref.id))
@@ -167,19 +172,32 @@ function wordComp(a, b) {
   return 0;
 }
 
-async function monitorWords(gameCode) {
+function monitorWords(gameCode, setWords) {
   const db = firebase_.firestore();
-  const wordHashes = await db
-    .collection("games")
-    .doc(gameCode)
-    .get()
-    .then(doc => doc.data().words);
-  const promises = wordHashes.map(hash => db
+  return db
     .collection("words")
-    .doc(hash)
-    .get()
-    .then(ref => { const withIds = ref.data(); withIds.id = ref.id; return withIds; }));
-  return Promise.all(promises);
+    .where("gameCode", "==", gameCode)
+    .onSnapshot((querySnapshot) => {
+      const words = [];
+      querySnapshot.forEach(doc => words.push(doc.data()));
+      setWords(words);
+    });
+}
+
+function monitorPlayers(gameCode, setPlayers) {
+  const db = firebase_.firestore();
+  return db
+    .collection("players")
+    .where("gameCode", "==", gameCode)
+    .onSnapshot((querySnapshot) => {
+      const players = [];
+      querySnapshot.forEach(doc => {
+        const withId = doc.data();
+        withId.id = doc.id;
+        players.push(withId);
+      });
+      setPlayers(players);
+    });
 }
 
 function monitorPlayer(id) {
@@ -201,5 +219,5 @@ function monitorGame(code) {
 }
 
 export {
-  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorPlayer, monitorGame
+  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorPlayer, monitorGame, monitorPlayers
 };

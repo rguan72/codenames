@@ -30,6 +30,23 @@ export default function Guide({ color, words }) {
   const classes = useStyles({ color: types[upperColor] });
   let wordS = "Words";
   if (color === "black") wordS = "Word";
+  if (words === undefined || words.length === 0) {
+    return (
+      <div>
+        <Typography variant="h5">
+          <span className={classes.colored}>
+            {" "}
+            {exprs[color]}
+            {" "}
+          </span>
+          {wordS}
+        </Typography>
+        <List className={classes.root}>
+          &nbsp;
+        </List>
+      </div>
+    );
+  }
   words.sort(wordComp);
   const wordVals = words
     .filter(word => word.type === upperColor)

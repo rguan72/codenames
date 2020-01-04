@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     padding: 30
   },
   colored: {
-    backgroundColor: props => types[props.word.type]
+    backgroundColor: props => (props.word ? types[props.word.type] : "#ffffff")
   },
   basis: {
     minHeight: 130,
@@ -76,7 +76,7 @@ export default function GameCard(props) {
           onClick={flip}
           disabled={disabled}
         >
-          <Typography variant="h2">{word.value}</Typography>
+          <Typography variant="h2">{word ? word.value : ""}</Typography>
         </CardActionArea>
       </Card>
     );
