@@ -6,7 +6,7 @@ import { teams, roles } from "./constants";
 
 function genCode() {
   let code = "";
-  for (let i = 0; i < 4; ++i) {
+  for (let i = 0; i < 4; i += 1) {
     const randint = Math.floor(Math.random() * 36);
     const asciiOffset = 87;
     if (randint < 10) code += randint;
@@ -59,7 +59,7 @@ function addWords(gameCode, redTurn) {
       })
       .then(ref => wordHashes.push(ref.id))
   );
-  for (let i = 1; i < 5; ++i) {
+  for (let i = 1; i < 5; i += 1) {
     promises.push(
       db
         .collection("words")
@@ -72,7 +72,7 @@ function addWords(gameCode, redTurn) {
         .then(ref => wordHashes.push(ref.id))
     );
   }
-  for (let i = 5; i < 12; ++i) {
+  for (let i = 5; i < 12; i += 1) {
     promises.push(
       db
         .collection("words")
@@ -85,7 +85,7 @@ function addWords(gameCode, redTurn) {
         .then(ref => wordHashes.push(ref.id))
     );
   }
-  for (let i = 12; i < 19; ++i) {
+  for (let i = 12; i < 19; i += 1) {
     promises.push(
       db
         .collection("words")
@@ -174,6 +174,24 @@ async function monitorWords(gameCode) {
   return Promise.all(promises);
 }
 
+function monitorPlayer(id) {
+  const db = firebase_.firestore();
+  return db
+    .collection("players")
+    .doc(id)
+    .get()
+    .then(doc => doc.data());
+}
+
+function monitorGame(code) {
+  const db = firebase_.firestore();
+  return db
+    .collection("games")
+    .doc(code)
+    .get()
+    .then(doc => doc.data());
+}
+
 export {
-  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords
+  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorPlayer, monitorGame
 };

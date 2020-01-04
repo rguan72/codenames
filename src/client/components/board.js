@@ -12,18 +12,34 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Board({ words }) {
+export default function Board({ words, code, disabled }) {
   const classes = useStyles();
   return (
     <Box>
-      <Box className={classes.marBot}>
-        <GameCard type="RED" name="field" />
-        <GameCard type="BEIGE" name="axle" />
-      </Box>
-      <Box className={classes.marTop}>
-        <GameCard type="BLACK" name="cool" />
-        <GameCard type="BLUE" name="bros" />
-      </Box>
+      <GameCard
+        type={words[0].type}
+        name={words[0].value}
+        code={code}
+        disabled={disabled}
+      />
+      <GameCard
+        type={words[1].type}
+        name={words[1].value}
+        code={code}
+        disabled={disabled}
+      />
+      <GameCard
+        type={words[2].type}
+        name={words[2].value}
+        code={code}
+        disabled={disabled}
+      />
+      <GameCard
+        type={words[3].type}
+        name={words[3].value}
+        code={code}
+        disabled={disabled}
+      />
     </Box>
   );
 }

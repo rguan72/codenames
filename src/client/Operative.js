@@ -5,13 +5,22 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Board from "./components/board";
-import { monitorWords, wordComp } from "./utils";
+import {
+  monitorWords, wordComp, monitorPlayer, monitorGame
+} from "./utils";
+import { teams } from "./constants";
 
 export default function Operative() {
   const [words, setWords] = useState([]);
+  const [player, setPlayer] = useState(null);
+  const [myTurn, setMyTurn] = useState(false);
   const { id, code } = props.match.params;
-
   useEffect(() => monitorWords(code).then(data => { data.sort(wordComp); setWords(data); }));
+  useEffect(() => monitorGame(code).then(
+    data => setMyTurn((player.team === teams.RED && data.redTurn))
+    || (player.team === teams.BLUE && !data.redTurn)
+  ));
+  useEffect(() => monitorPlayer(id).then(data => setPlayer(data)), []);
   const settings = {
     dots: true,
     infinite: true,
@@ -26,11 +35,11 @@ export default function Operative() {
         <FontAwesomeIcon icon="user-secret" color="red" size="2x" />
       </Box>
       <Slider {...settings}>
-        <Board />
-        <Board />
-        <Board />
-        <Board />
-        <Board />
+        <Board words={words.slice(0, 4)} code={code} disabled={!myTurn} />
+        <Board words={words.slice(4, 8)} code={code} disabled={!myTurn} />
+        <Board words={words.slice(8, 12)} code={code} disabled={!myTurn} />
+        <Board words={words.slice(12, 16)} code={code} disabled={!myTurn} />
+        <Board words={words.slice(16, 20)} code={code} disabled={!myTurn} />
       </Slider>
     </div>
   );
