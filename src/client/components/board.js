@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Board() {
+export default function Board({ words }) {
   const classes = useStyles();
   return (
     <Box>

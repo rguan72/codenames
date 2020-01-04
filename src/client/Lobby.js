@@ -40,7 +40,8 @@ export default function Lobby(props) {
     const db = firebase_.firestore();
     db.collection("games")
       .doc(code)
-      .onSnapshot((doc) => {
+      .get()
+      .then((doc) => {
         const promises = [];
         const playerSnap = doc.data().players;
         for (let i = 0; i < playerSnap.length; i += 1) {
@@ -57,18 +58,6 @@ export default function Lobby(props) {
           setAllReady(arr.length > 3 && arr.map(pl => pl.ready).every(isReady => isReady));
           return setPlayers(arr);
         });
-      });
-  }
-
-  function monitorPlayer() {
-    const db = firebase_.firestore();
-    db.collection("players")
-      .doc(id)
-      .onSnapshot((doc) => {
-        const playerSnap = doc.data();
-        setTeam(playerSnap.team);
-        setRole(playerSnap.role);
-        setReady(playerSnap.ready);
       });
   }
 
@@ -94,7 +83,6 @@ export default function Lobby(props) {
   }
 
   useEffect(monitorLobby);
-  useEffect(monitorPlayer);
 
   const playerItems = players.map(player => (
     <Box m={4} mt={2} key={player.id}>
@@ -125,7 +113,10 @@ export default function Lobby(props) {
       <Box display="flex" m={4} justifyContent="center">
         <NativeSelect
           value={team}
-          onChange={event => setPlayerTeam(event.target.value)}
+          onChange={event => {
+            setTeam(event.target.value);
+            setPlayerTeam(event.target.value);
+          }}
           className={classes.margin}
         >
           <option value="red"> Red </option>
@@ -133,7 +124,10 @@ export default function Lobby(props) {
         </NativeSelect>
         <NativeSelect
           value={role}
-          onChange={event => setPlayerRole(event.target.value)}
+          onChange={event => {
+            setRole(event.target.value);
+            setPlayerRole(event.target.value);
+          }}
           className={classes.margin}
         >
           <option value={roles.SPYMASTER}> Spymaster </option>
@@ -145,7 +139,10 @@ export default function Lobby(props) {
           control={(
             <Switch
               checked={ready}
-              onChange={event => setPlayerReady(event.target.checked)}
+              onChange={event => {
+                setReady(event.target.checked);
+                setPlayerReady(event.target.checked);
+              }}
               value="ready"
               color="primary"
             />
@@ -153,9 +150,8 @@ export default function Lobby(props) {
           label="Ready"
         />
         <Link to={`/${role}/${code}/${id}`} style={{ textDecoration: "none" }}>
-          <Button variant="contained" disabled={!allReady}>
-            Start
-          </Button>
+          {/* disabled={!allReady} */}
+          <Button variant="contained">Start</Button>
         </Link>
       </Box>
     </div>

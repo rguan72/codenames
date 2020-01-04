@@ -151,25 +151,29 @@ function checkValid(gameCode) {
     .catch(err => console.log(err));
 }
 
-function getLobbySnap(gameCode) {
+function wordComp(a, b) {
+  const nameA = a.value.toUpperCase();
+  const nameB = b.value.toUpperCase();
+  if (nameA < nameB) return -1;
+  if (nameA > nameB) return 1;
+  return 0;
+}
+
+async function monitorWords(gameCode) {
   const db = firebase_.firestore();
-  return db
+  const wordHashes = await db
     .collection("games")
     .doc(gameCode)
-    .onSnapshot(doc => { doc.data().players; })
-    .then(players => {
-      const promises = [];
-      for (let i = 0; i < players.length; i += 1) {
-        promises.push(db
-          .collection("players")
-          .doc(players[i])
-          .onSnapshot(doc => doc.data()));
-      }
-      return Promise.all(promises);
-    })
-    .catch(err => console.log(err));
+    .get()
+    .then(doc => doc.data().words);
+  const promises = wordHashes.map(hash => db
+    .collection("words")
+    .doc(hash)
+    .get()
+    .then(ref => ref.data()));
+  return Promise.all(promises);
 }
 
 export {
-  genCode, addPlayer, addWords, createGame, checkValid, getLobbySnap
+  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords
 };

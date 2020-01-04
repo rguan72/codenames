@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Board from "./components/board";
-
-const useStyles = makeStyles({
-  marTop: {
-    marginTop: 10
-  },
-});
+import { monitorWords, wordComp } from "./utils";
 
 export default function Operative() {
-  const classes = useStyles();
-  const [cards, setCards] = useState(Array(20).fill(false));
+  const [words, setWords] = useState([]);
+  const { id, code } = props.match.params;
+
+  useEffect(() => monitorWords(code).then(data => { data.sort(wordComp); setWords(data); }));
   const settings = {
     dots: true,
     infinite: true,
@@ -26,7 +22,7 @@ export default function Operative() {
   };
   return (
     <div>
-      <Box display="flex" justifyContent="center" className={classes.marTop}>
+      <Box display="flex" justifyContent="center" mt={2}>
         <FontAwesomeIcon icon="user-secret" color="red" size="2x" />
       </Box>
       <Slider {...settings}>
