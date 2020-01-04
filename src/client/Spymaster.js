@@ -7,7 +7,7 @@ export default function Spymaster(props) {
   const [words, setWords] = useState([]);
   const { code } = props.match.params;
 
-  useEffect(() => monitorWords(code).then(data => setWords(data)));
+  useEffect(() => { monitorWords(code).then(data => setWords(data)); });
   return (
     <div>
       <Box display="flex">

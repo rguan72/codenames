@@ -55,9 +55,9 @@ export default function Join({ location }) {
         className={classes.marTop}
         disabled={!valid}
         onClick={() => {
-          addPlayer(code, location.name)
-            .then(id => { console.log(id); setPID(id); setDone(true); })
-            .catch(err => console.log(err));
+          const id = addPlayer(code, location.name);
+          setPID(id);
+          setDone(true);
         }}
       >
         Join

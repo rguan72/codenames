@@ -17,26 +17,22 @@ export default function Board({ words, code, disabled }) {
   return (
     <Box>
       <GameCard
-        type={words[0].type}
-        name={words[0].value}
+        word={words[0]}
         code={code}
         disabled={disabled}
       />
       <GameCard
-        type={words[1].type}
-        name={words[1].value}
+        word={words[1]}
         code={code}
         disabled={disabled}
       />
       <GameCard
-        type={words[2].type}
-        name={words[2].value}
+        word={words[2]}
         code={code}
         disabled={disabled}
       />
       <GameCard
-        type={words[3].type}
-        name={words[3].value}
+        word={words[3]}
         code={code}
         disabled={disabled}
       />

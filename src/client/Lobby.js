@@ -40,8 +40,8 @@ export default function Lobby(props) {
     const db = firebase_.firestore();
     db.collection("games")
       .doc(code)
-      .get()
-      .then((doc) => {
+      .onSnapshot((doc) => {
+        if (!doc.exists) { return; }
         const promises = [];
         const playerSnap = doc.data().players;
         for (let i = 0; i < playerSnap.length; i += 1) {
@@ -82,7 +82,7 @@ export default function Lobby(props) {
       .update({ ready: selReady });
   }
 
-  useEffect(monitorLobby);
+  useEffect(() => { monitorLobby(); });
 
   const playerItems = players.map(player => (
     <Box m={4} mt={2} key={player.id}>

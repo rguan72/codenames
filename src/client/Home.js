@@ -52,11 +52,10 @@ export default function Home() {
           variant="contained"
           size="large"
           onClick={() => {
-            createGame(name).then(res => {
-              setCode(res.gameCode);
-              setPID(res.id);
-              setDone(true);
-            });
+            const { id, gameCode } = createGame(name);
+            setCode(gameCode);
+            setPID(id);
+            setDone(true);
           }}
           className={classes.button}
           disabled={name === ""}

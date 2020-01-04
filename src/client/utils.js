@@ -15,28 +15,35 @@ function genCode() {
   return code;
 }
 
+function randomString(length, chars) {
+  let result = "";
+  for (let i = length; i > 0; i -= 1) result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+}
 function addPlayer(gameCode, name) {
   const db = firebase_.firestore();
-  return db.collection("players")
-    .add({
+  const id = randomString(20, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  db.collection("players")
+    .doc(id)
+    .set({
       name,
       gameCode,
       team: teams.RED,
       role: roles.SPYMASTER,
       ready: false,
-      created: Date.now()
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
-    .then(ref => {
+    .then(() => {
       db
         .collection("games")
         .doc(gameCode)
         .update({
-          players: firebase.firestore.FieldValue.arrayUnion(ref.id),
+          players: firebase.firestore.FieldValue.arrayUnion(id),
           numPlayers: firebase.firestore.FieldValue.increment(1),
         });
-      return ref.id;
     })
     .catch(err => console.log(err));
+  return id;
 }
 
 function addWords(gameCode, redTurn) {
@@ -55,7 +62,7 @@ function addWords(gameCode, redTurn) {
         value: wordList[arr[0]],
         type: "BLACK",
         flipped: false,
-        created: Date.now()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(ref => wordHashes.push(ref.id))
   );
@@ -67,7 +74,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "BEIGE",
           flipped: false,
-          created: Date.now()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
     );
@@ -80,7 +87,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "RED",
           flipped: false,
-          created: Date.now()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
     );
@@ -93,7 +100,7 @@ function addWords(gameCode, redTurn) {
           value: wordList[arr[i]],
           type: "BLUE",
           flipped: false,
-          created: Date.now()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(ref => wordHashes.push(ref.id))
     );
@@ -105,7 +112,7 @@ function addWords(gameCode, redTurn) {
         value: wordList[arr[19]],
         type: redTurn ? "RED" : "BLUE",
         flipped: false,
-        created: Date.now()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(ref => wordHashes.push(ref.id))
   );
@@ -117,7 +124,6 @@ function addWords(gameCode, redTurn) {
 
 function createGame(name) {
   const db = firebase_.firestore();
-  let newCode = false;
   const gameCode = genCode();
   //   while (!newCode) {
   const docRef = db.collection("games").doc(gameCode);
@@ -126,19 +132,21 @@ function createGame(name) {
     if (!doc.exists || doc.data().active === false) {
       docRef.set({
         redTurn,
-        created: Date.now(),
+        redFirst: redTurn,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         numReady: 0,
         numPlayers: 0,
         active: true,
-        players: []
+        players: [],
+        redFlipped: 0,
+        blueFlipped: 0,
+        winner: null
       });
-      newCode = true;
     }
   });
   addWords(gameCode, redTurn);
-  return addPlayer(gameCode, name)
-    .then(id => ({ gameCode, id }))
-    .catch(err => console.log(err));
+  const id = addPlayer(gameCode, name);
+  return { gameCode, id };
 }
 
 function checkValid(gameCode) {
@@ -170,7 +178,7 @@ async function monitorWords(gameCode) {
     .collection("words")
     .doc(hash)
     .get()
-    .then(ref => ref.data()));
+    .then(ref => { const withIds = ref.data(); withIds.id = ref.id; return withIds; }));
   return Promise.all(promises);
 }
 
