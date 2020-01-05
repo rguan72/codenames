@@ -47,7 +47,6 @@ export default function Guide({ color, words }) {
       </div>
     );
   }
-  words.sort(wordComp);
   const wordVals = words
     .filter(word => word.type === upperColor)
     .map(word => (

@@ -7,10 +7,11 @@ import Box from "@material-ui/core/Box";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import firebase from "firebase/app";
 import Player from "./components/player";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
-import { monitorPlayers } from "./utils";
+import { monitorPlayers, monitorGame } from "./utils";
 
 const useStyles = makeStyles(() => ({
   margin: {
@@ -34,11 +35,16 @@ export default function Lobby(props) {
   const [team, setTeam] = useState(teams.RED);
   const [role, setRole] = useState(roles.SPYMASTER);
   const [ready, setReady] = useState(false);
-  const [allReady, setAllReady] = useState(false);
+  const [game, setGame] = useState({});
   const { id, code } = props.match.params;
 
   useEffect(() => {
     const unsubscribe = monitorPlayers(code, setPlayers);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = monitorGame(code, setGame);
     return () => unsubscribe();
   }, []);
 
@@ -61,7 +67,15 @@ export default function Lobby(props) {
     db.collection("players")
       .doc(id)
       .update({ ready: selReady });
+    if (selReady) db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(1) });
+    else db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(-1) });
   }
+
+  function handleClick(e, areAllReady) {
+    if (!areAllReady) e.preventDefault();
+  }
+
+  const allReady = game && game.numReady === game.numPlayers;
 
   const playerItems = players.map(player => (
     <Box m={4} mt={2} key={player.id}>
@@ -128,9 +142,8 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team } }} style={{ textDecoration: "none" }}>
-          {/* disabled={!allReady} */}
-          <Button variant="contained">Start</Button>
+        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
+          <Button disabled={!allReady} variant="contained">Start</Button>
         </Link>
       </Box>
     </div>

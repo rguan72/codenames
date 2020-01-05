@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
@@ -6,18 +7,24 @@ import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase/app";
 import GameCard from "./components/card";
-import { monitorWords } from "./utils";
+import { monitorWords, monitorGame, wordComp } from "./utils";
 import { teams } from "./constants";
 import firebase_ from "./Firebase";
 
 export default function Operative(props) {
   const [words, setWords] = useState(Array(20).fill(null));
   const [myTurn, setMyTurn] = useState(false);
-  const { id, code } = props.match.params;
+  const [game, setGame] = useState({});
+  const { code } = props.match.params;
   const { team } = props.location.state;
 
   useEffect(() => {
     const unsubscribe = monitorWords(code, setWords);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = monitorGame(code, setGame);
     return () => unsubscribe();
   }, []);
 
@@ -56,7 +63,7 @@ export default function Operative(props) {
         }
       });
     } else if (word.type === "BLUE") {
-      db.collection("games").doc(code).update({ redFlipped: firebase.firestore.FieldValue.increment(1) });
+      db.collection("games").doc(code).update({ blueFlipped: firebase.firestore.FieldValue.increment(1) });
       db.collection("games").doc(code).get().then((ref) => {
         const data = ref.data();
         if ((data.blueFlipped >= 7 && data.redFirst) || (data.blueFlipped >= 8 && !data.redFirst)) { db.collection("games").doc(code).update({ winner: "blue" }); }
@@ -73,7 +80,6 @@ export default function Operative(props) {
   function renderCard(i) {
     return (
       <GameCard
-        key={words[i] ? words[i].id : i}
         word={words[i]}
         disabled={!myTurn}
         onClick={() => handleClick(i)}
@@ -84,7 +90,7 @@ export default function Operative(props) {
   const boardItems = [];
   for (let i = 0; i < 5; i += 1) {
     boardItems.push(
-      <Box>
+      <Box key={i}>
         {renderCard(4 * i)}
         {renderCard(4 * i + 1)}
         {renderCard(4 * i + 2)}
@@ -100,6 +106,9 @@ export default function Operative(props) {
     slidesToScroll: 1,
     arrows: true
   };
+  if (game.winner && team === game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: true } }} />;
+  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: false } }} />;
+
   return (
     <div>
       <Box display="flex" justifyContent="center" mt={2}>

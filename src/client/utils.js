@@ -184,6 +184,7 @@ function monitorWords(gameCode, setWords) {
         withId.id = doc.id;
         words.push(withId);
       });
+      words.sort(wordComp);
       setWords(words);
     });
 }
@@ -204,24 +205,17 @@ function monitorPlayers(gameCode, setPlayers) {
     });
 }
 
-function monitorPlayer(id) {
-  const db = firebase_.firestore();
-  return db
-    .collection("players")
-    .doc(id)
-    .get()
-    .then(doc => doc.data());
-}
 
-function monitorGame(code) {
+function monitorGame(code, setGame) {
   const db = firebase_.firestore();
   return db
     .collection("games")
     .doc(code)
-    .get()
-    .then(doc => doc.data());
+    .onSnapshot((doc) => {
+      setGame(doc.data());
+    });
 }
 
 export {
-  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorPlayer, monitorGame, monitorPlayers
+  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorGame, monitorPlayers
 };

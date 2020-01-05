@@ -6,6 +6,7 @@ import Home from "./Home";
 import Lobby from "./Lobby";
 import Operative from "./Operative";
 import Spymaster from "./Spymaster";
+import End from "./End";
 import Join from "./Join";
 import "./app.css";
 
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/lobby/:code/:id" component={Lobby} />
         <Route path="/operative/:code/:id" component={Operative} />
         <Route path="/spymaster/:code/:id" component={Spymaster} />
+        <Route path="/end" component={End} />
         <Route path="/join" component={Join} />
       </HashRouter>
     </div>
