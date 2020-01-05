@@ -1,0 +1,9 @@
+{
+    "apiKey": "AIzaSyCRJSSWEEfZ6XuGvXFW4jXlrOU8J22uD1E",
+    "authDomain": "fake-codenames.firebaseapp.com",
+    "databaseURL": "https://fake-codenames.firebaseio.com",
+    "projectId": "fake-codenames",
+    "storageBucket": "fake-codenames.appspot.com",
+    "messagingSenderId": "858490239510",
+    "appId": "1:858490239510:web:89d3851f63116dd2579337"
+}
