@@ -20,6 +20,7 @@ function randomString(length, chars) {
   for (let i = length; i > 0; i -= 1) result += chars[Math.floor(Math.random() * chars.length)];
   return result;
 }
+
 function addPlayer(gameCode, name) {
   const db = firebase_.firestore();
   const id = randomString(20, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -49,7 +50,7 @@ function addPlayer(gameCode, name) {
 function addWords(gameCode, redTurn) {
   const arr = [];
   while (arr.length < 20) {
-    const idx = Math.floor(Math.random() * 673);
+    const idx = Math.floor(Math.random() * wordList.length);
     if (arr.indexOf(idx) === -1) arr.push(idx);
   }
   const db = firebase_.firestore();
@@ -127,14 +128,20 @@ function addWords(gameCode, redTurn) {
     .set({ words: wordHashes }, { merge: true })).catch(err => console.log(err));
 }
 
+function isToday(someDate) {
+  const today = new Date();
+  return someDate.getDate() === today.getDate()
+    && someDate.getMonth() === today.getMonth()
+    && someDate.getFullYear() === today.getFullYear();
+}
+
 function createGame(name) {
   const db = firebase_.firestore();
   const gameCode = genCode();
-  //   while (!newCode) {
   const docRef = db.collection("games").doc(gameCode);
   const redTurn = Math.random() > 0.5;
   docRef.get().then(doc => {
-    if (!doc.exists || doc.data().active === false) {
+    if (!doc.exists || doc.data().active === false || !isToday(doc.data().timestamp)) {
       docRef.set({
         redTurn,
         redFirst: redTurn,
