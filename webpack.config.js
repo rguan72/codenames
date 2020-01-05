@@ -1,9 +1,12 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
+const getClientEnvironment = require("./env");
 
 const outputDirectory = "dist";
+const env = getClientEnvironment();
 
 module.exports = {
   entry: ["babel-polyfill", "./src/client/index.js"],
@@ -46,6 +49,7 @@ module.exports = {
       template: "./public/index.html",
       favicon: "./public/favicon.ico"
     }),
-    new Dotenv()
+    new Dotenv(),
+    new webpack.DefinePlugin(env.stringified),
   ]
 };
