@@ -3,6 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import OutLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { createGame } from "./utils";
@@ -73,13 +74,30 @@ export default function Home() {
           </Button>
         </Link>
       </Box>
-      {name === ""
-      && (
-      <Typography variant="h6" className={`${classes.left30} ${classes.nonamehide}`}>
-        Please set your name!
-      </Typography>
-      )
-      }
+      {name === "" && (
+        <Typography
+          variant="h6"
+          className={`${classes.left30} ${classes.nonamehide}`}
+        >
+          Please set your name!
+        </Typography>
+      )}
+      <Box display="flex" flexDirection="column" ml={3.5} mt={35}>
+        <Typography variant="subtitle2">
+          Created by
+          {" "}
+          <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
+        </Typography>
+        <Typography variant="subtitle2">
+          <OutLink href="https://github.com/rguan72/codenames">
+            {" "}
+            View on GitHub
+            {" "}
+          </OutLink>
+        </Typography>
+      </Box>
     </div>
-  ) : <Redirect to={{ pathname: `/lobby/${code}/${pid}` }} />;
+  ) : (
+    <Redirect to={{ pathname: `/lobby/${code}/${pid}` }} />
+  );
 }
