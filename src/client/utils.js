@@ -129,10 +129,8 @@ function addWords(gameCode, redTurn) {
 }
 
 function isToday(someDate) {
-  const today = new Date();
-  return someDate.getDate() === today.getDate()
-    && someDate.getMonth() === today.getMonth()
-    && someDate.getFullYear() === today.getFullYear();
+  const oneDay = 24 * 60 * 60 * 1000;
+  return (new Date() - someDate) < oneDay;
 }
 
 function createGame(name) {
@@ -141,7 +139,7 @@ function createGame(name) {
   const docRef = db.collection("games").doc(gameCode);
   const redTurn = Math.random() > 0.5;
   docRef.get().then(doc => {
-    if (!doc.exists || doc.data().active === false || !isToday(doc.data().timestamp)) {
+    if (!doc.exists || doc.data().active === false || !isToday(doc.data().timestamp.toDate())) {
       docRef.set({
         redTurn,
         redFirst: redTurn,
