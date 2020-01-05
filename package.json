@@ -1,7 +1,7 @@
 {
-  "name": "simple-react-full-stack",
+  "name": "codenames",
   "version": "1.0.0",
-  "description": "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
+  "description": "Online version of the popular party game Codenames.",
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -31,7 +31,8 @@
     "react-router-dom": "^5.1.2",
     "react-slick": "^0.25.2",
     "slick-carousel": "^1.8.1",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "webmanifest-loader": "^0.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
