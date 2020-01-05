@@ -75,7 +75,7 @@ export default function Lobby(props) {
     if (!areAllReady) e.preventDefault();
   }
 
-  const allReady = game && game.numReady === game.numPlayers;
+  const allReady = game && game.numPlayers > 0 && game.numReady === game.numPlayers;
 
   const playerItems = players.map(player => (
     <Box m={4} mt={2} key={player.id}>

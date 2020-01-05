@@ -1,10 +1,10 @@
 import React from "react";
+import { storiesOf } from "@storybook/react";
+import StoryRouter from "storybook-react-router";
 import End from "../src/client/End";
 
-export default {
-  component: End,
-  title: "End"
-};
+const stories = storiesOf("End", module);
+stories.addDecorator(StoryRouter());
 
 const words = [
   {
@@ -75,5 +75,5 @@ const words = [
   }
 ];
 
-export const won = () => <End words={words} win />;
-export const lost = () => <End words={words} win={false} />;
+stories.add("won", () => <End location={{ state: { words, win: true } }} />);
+stories.add("lost", () => <End location={{ state: { words, win: false } }} />);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -11,12 +13,19 @@ import { monitorWords, monitorGame, wordComp } from "./utils";
 import { teams } from "./constants";
 import firebase_ from "./Firebase";
 
+const useStyles = makeStyles({
+  mar: {
+    marginLeft: 50
+  }
+});
+
 export default function Operative(props) {
   const [words, setWords] = useState(Array(20).fill(null));
   const [myTurn, setMyTurn] = useState(false);
   const [game, setGame] = useState({});
   const { code } = props.match.params;
   const { team } = props.location.state;
+  const classes = useStyles();
 
   useEffect(() => {
     const unsubscribe = monitorWords(code, setWords);
@@ -77,6 +86,12 @@ export default function Operative(props) {
     }
   }
 
+  function endTurn() {
+    const db = firebase_.firestore();
+    if (team === teams.RED) db.collection("games").doc(code).update({ redTurn: false });
+    else db.collection("games").doc(code).update({ redTurn: true });
+  }
+
   function renderCard(i) {
     return (
       <GameCard
@@ -111,8 +126,9 @@ export default function Operative(props) {
 
   return (
     <div>
-      <Box display="flex" justifyContent="center" mt={2}>
+      <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
+        <Button variant="outlined" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large" color="primary"> End Turn </Button>
       </Box>
       <Slider {...settings}>
         {boardItems}
