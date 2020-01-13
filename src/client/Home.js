@@ -27,6 +27,9 @@ const useStyles = makeStyles(() => ({
   left30: {
     marginLeft: 30
   },
+  noDecor: {
+    textDecoration: "none"
+  }
 }));
 
 
@@ -63,7 +66,7 @@ export default function Home() {
         >
           New Game
         </Button>
-        <Link to={{ pathname: "/join", name }}>
+        <Link to={{ pathname: "/join", name }} className={classes.noDecor} onClick={e => { if (name === "") e.preventDefault(); }}>
           <Button
             variant="contained"
             size="large"
