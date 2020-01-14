@@ -157,7 +157,7 @@ function createGame(gameCode, isRedTurn) {
   return docRef.get().then(doc => {
     if (!doc.exists || doc.data().active === false || !isToday(doc.data().timestamp.toDate())) {
       docRef.set({
-        isRedTurn,
+        redTurn: isRedTurn,
         redFirst: isRedTurn,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         numReady: 0,
