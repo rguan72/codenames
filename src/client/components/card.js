@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: props => (props.word ? types[props.word.type] : "#ffffff")
   },
   basis: {
-    minHeight: 130,
+    minHeight: 110,
   },
   disabled: {
     backgroundColor: "#e0e0e0",
@@ -40,7 +40,7 @@ export default function GameCard(props) {
           onClick={onClick}
           disabled={disabled}
         >
-          <Typography variant="h3" />
+          <Typography variant="h4" />
         </CardActionArea>
       </Card>
     );
@@ -53,10 +53,16 @@ export default function GameCard(props) {
           onClick={onClick}
           disabled={disabled}
         >
-          <Typography variant="h2">{word ? word.value : ""}</Typography>
+          <Typography variant="h4">{word ? word.value : ""}</Typography>
         </CardActionArea>
       </Card>
     );
   }
-  return <Card className={`${classes.colored} ${classes.basis} ${classes.mar}`}> &nbsp; </Card>;
+  return (
+    <Card className={`${classes.colored} ${classes.basis} ${classes.mar}`}>
+      {" "}
+      <Typography variant="h4"> &nbsp; </Typography>
+      {" "}
+    </Card>
+  );
 }
