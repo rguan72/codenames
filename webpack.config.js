@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const getClientEnvironment = require("./env");
 
@@ -30,7 +31,7 @@ module.exports = {
       {
         test: /\.(png|woff|woff2|eot|ttf|svg|jpg|gif)$/,
         loader: "url-loader?limit=100000"
-      },
+      }
     ]
   },
   resolve: {
@@ -49,7 +50,11 @@ module.exports = {
       template: "./public/index.html",
       favicon: "./public/favicon.ico"
     }),
+    new CopyPlugin([
+      { from: "public/*.png", to: "dist" },
+      { from: "public/_redirects", to: "dist" }
+    ]),
     new Dotenv(),
-    new webpack.DefinePlugin(env.stringified),
+    new webpack.DefinePlugin(env.stringified)
   ]
 };

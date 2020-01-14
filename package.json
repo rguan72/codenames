@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Online version of the popular party game Codenames.",
   "main": "src/server/index.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/rguan72/codenames"
+  },
   "scripts": {
     "build": "webpack --mode production",
     "start": "npm run build && node src/server/index.js",
@@ -21,6 +25,7 @@
     "@material-ui/core": "^4.8.2",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
+    "copy-webpack-plugin": "^5.1.1",
     "dotenv": "^8.1.0",
     "dotenv-webpack": "^1.7.0",
     "express": "^4.16.3",
