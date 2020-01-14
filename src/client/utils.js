@@ -21,10 +21,18 @@ function randomString(length, chars) {
   return result;
 }
 
-function addPlayer(gameCode, name) {
+function genID() {
+  return randomString(20, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+}
+
+function redTurn() {
+  return Math.random() > 0.5;
+}
+
+function createPlayer(gameCode, id, name) {
   const db = firebase_.firestore();
-  const id = randomString(20, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  db.collection("players")
+  return db
+    .collection("players")
     .doc(id)
     .set({
       name,
@@ -35,7 +43,11 @@ function addPlayer(gameCode, name) {
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
     .catch(err => console.log(err));
-  db
+}
+
+function addPlayerToGame(gameCode, id) {
+  const db = firebase_.firestore();
+  return db
     .collection("games")
     .doc(gameCode)
     .update({
@@ -43,10 +55,17 @@ function addPlayer(gameCode, name) {
       numPlayers: firebase.firestore.FieldValue.increment(1),
     })
     .catch(err => console.log(err));
-  return id;
 }
 
-function addWords(gameCode, redTurn) {
+function addPlayer(gameCode, id, name) {
+  const promises = [
+    createPlayer(gameCode, id, name),
+    addPlayerToGame(gameCode, id)
+  ];
+  return Promise.all(promises);
+}
+
+function addWords(gameCode, isRedTurn) {
   const arr = [];
   while (arr.length < 20) {
     const idx = Math.floor(Math.random() * wordList.length);
@@ -114,7 +133,7 @@ function addWords(gameCode, redTurn) {
       .collection("words")
       .add({
         value: wordList[arr[19]],
-        type: redTurn ? "RED" : "BLUE",
+        type: isRedTurn ? "RED" : "BLUE",
         flipped: false,
         gameCode,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -132,15 +151,14 @@ function isToday(someDate) {
   return (new Date() - someDate) < oneDay;
 }
 
-function createGame(gameCode) {
+function createGame(gameCode, isRedTurn) {
   const db = firebase_.firestore();
   const docRef = db.collection("games").doc(gameCode);
-  const redTurn = Math.random() > 0.5;
-  docRef.get().then(doc => {
+  return docRef.get().then(doc => {
     if (!doc.exists || doc.data().active === false || !isToday(doc.data().timestamp.toDate())) {
       docRef.set({
-        redTurn,
-        redFirst: redTurn,
+        isRedTurn,
+        redFirst: isRedTurn,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         numReady: 0,
         numPlayers: 0,
@@ -153,7 +171,6 @@ function createGame(gameCode) {
       });
     }
   });
-  addWords(gameCode, redTurn);
 }
 
 function checkValid(gameCode) {
@@ -227,7 +244,11 @@ function getGameRef(code) {
 
 export {
   genCode,
+  genID,
+  redTurn,
   addPlayer,
+  createPlayer,
+  addPlayerToGame,
   addWords,
   createGame,
   checkValid,

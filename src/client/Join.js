@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { addPlayer, checkValid } from "./utils";
+import { addPlayer, checkValid, genID } from "./utils";
 
 const useStyles = makeStyles({
   mar: {
@@ -60,7 +60,8 @@ export default function Join({ location }) {
         className={classes.marTop}
         disabled={!valid}
         onClick={() => {
-          const id = addPlayer(code, name);
+          const id = genID();
+          addPlayer(code, id, name);
           setPID(id);
           setDone(true);
         }}

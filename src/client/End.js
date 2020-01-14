@@ -5,7 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Guide from "./components/guide";
 import PlayAgain from "./components/playAgain";
-import { getGameRef, createGame, addPlayer } from "./utils";
+import {
+  getGameRef, createGame, addPlayer, genID, redTurn, addWords
+} from "./utils";
 
 const useStyles = makeStyles({
   marL1: {
@@ -22,7 +24,7 @@ export default function End({ location, match }) {
   let words; let win; let name;
   if (!location.state) {
     words = JSON.parse(sessionStorage.getItem("words"));
-    win = sessionStorage.getItem("win");
+    win = JSON.parse(sessionStorage.getItem("win"));
     name = sessionStorage.getItem("name");
   } else {
     words = location.state.words;
@@ -39,7 +41,9 @@ export default function End({ location, match }) {
       if (data.players[0] === id) {
         const nextRef = await getGameRef(data.nextCode);
         if (!nextRef.exists) {
-          createGame(data.nextCode);
+          const isRedTurn = redTurn();
+          createGame(data.nextCode, isRedTurn);
+          addWords(data.nextCode, isRedTurn);
         }
       }
     };
@@ -55,7 +59,9 @@ export default function End({ location, match }) {
         <Box display="flex" justifyContent="center" alignItems="center" ml={2} mb={1}>
           <PlayAgain
             onClick={() => {
-              setNextId(addPlayer(nextCode, name));
+              const newId = genID();
+              setNextId(newId);
+              addPlayer(nextCode, newId, name);
               setDone(true);
             }
             }

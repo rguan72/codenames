@@ -6,7 +6,9 @@ import Box from "@material-ui/core/Box";
 import OutLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { createGame, genCode, addPlayer } from "./utils";
+import {
+  createGame, genCode, genID, redTurn, addWords, createPlayer, addPlayerToGame
+} from "./utils";
 
 const useStyles = makeStyles(() => ({
   bar: {
@@ -62,8 +64,13 @@ export default function Home() {
           size="large"
           onClick={() => {
             const gameCode = genCode();
-            createGame(gameCode, name);
-            const id = addPlayer(gameCode, name);
+            const id = genID();
+            const isRedTurn = redTurn();
+            createPlayer(gameCode, id, name);
+            createGame(gameCode, isRedTurn).then(() => {
+              addWords(gameCode, isRedTurn);
+              addPlayerToGame(gameCode, id);
+            });
             setCode(gameCode);
             setPID(id);
             setDone(true);
