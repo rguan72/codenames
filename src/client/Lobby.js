@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -79,8 +79,16 @@ export default function Lobby(props) {
     else db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(-1) });
   }
 
+  function setGameStarted() {
+    const db = firebase_.firestore();
+    db.collection("games")
+      .doc(code)
+      .update({ started: true });
+  }
+
   function handleClick(e, areAllReady) {
     if (!areAllReady) e.preventDefault();
+    else setGameStarted();
   }
 
   const allReady = game && game.numPlayers > 0 && game.numReady === game.numPlayers;
@@ -95,6 +103,9 @@ export default function Lobby(props) {
       />
     </Box>
   ));
+
+  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} />;
+
   return (
     <div>
       <Box display="flex" mb={-2}>

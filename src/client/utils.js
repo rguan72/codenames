@@ -163,6 +163,7 @@ function createGame(gameCode, isRedTurn) {
         numReady: 0,
         numPlayers: 0,
         active: true,
+        started: false,
         players: [],
         redFlipped: 0,
         blueFlipped: 0,
