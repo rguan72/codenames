@@ -99,6 +99,13 @@ export default function Home() {
           <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
         </Typography>
         <Typography variant="subtitle2">
+          <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
+            {" "}
+            Make a suggestion
+            {" "}
+          </OutLink>
+        </Typography>
+        <Typography variant="subtitle2">
           <OutLink href="https://github.com/rguan72/codenames">
             {" "}
             View on GitHub
