@@ -255,6 +255,7 @@ const wordList = [
   "Goblin",
   "Gold",
   "Goodbye",
+  "Google",
   "Grandpa",
   "Grape",
   "Grass",

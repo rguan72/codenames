@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { types } from "../constants";
-import { wordComp } from "../utils";
 
 const useStyles = makeStyles({
   root: {
