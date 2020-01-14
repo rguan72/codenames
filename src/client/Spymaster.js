@@ -11,7 +11,15 @@ export default function Spymaster(props) {
   const [words, setWords] = useState([]);
   const [game, setGame] = useState({});
   const { code, id } = props.match.params;
-  const { team, name } = props.location.state;
+  let team;
+  let name;
+  if (!props.location.state) {
+    team = sessionStorage.getItem("team");
+    name = sessionStorage.getItem("name");
+  } else {
+    team = props.location.state.team;
+    name = props.location.state.name;
+  }
 
   useEffect(() => {
     const unsubscribe = monitorWords(code, setWords);
@@ -23,8 +31,18 @@ export default function Spymaster(props) {
     return () => unsubscribe();
   }, []);
 
-  if (game.winner && team === game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
-  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+  useEffect(() => {
+    sessionStorage.setItem("words", JSON.stringify(words));
+  }, [words]);
+
+  if (game.winner && team === game.winner) {
+    sessionStorage.setItem("win", true);
+    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+  }
+  if (game.winner && team !== game.winner) {
+    sessionStorage.setItem("win", false);
+    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+  }
 
   const turnString = ((game.redTurn && team === teams.RED) || (!game.redTurn && team === teams.BLUE)) ? "Your Turn" : "Their Turn";
 

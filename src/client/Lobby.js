@@ -36,8 +36,11 @@ export default function Lobby(props) {
   const [role, setRole] = useState(roles.SPYMASTER);
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
-  const { name } = props.location;
   const { id, code } = props.match.params;
+  let name;
+
+  if (props.location.name) name = props.location.name;
+  else name = sessionStorage.getItem("name");
 
   useEffect(() => {
     const unsubscribe = monitorPlayers(code, setPlayers);
@@ -48,6 +51,10 @@ export default function Lobby(props) {
     const unsubscribe = monitorGame(code, setGame);
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("team", team);
+  }, [team]);
 
   function setPlayerTeam(selTeam) {
     const db = firebase_.firestore();

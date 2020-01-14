@@ -14,22 +14,38 @@ const useStyles = makeStyles({
 });
 
 export default function End({ location, match }) {
-  const { words, win, name } = location.state;
   const { code, id } = match.params;
   const [done, setDone] = useState(false);
   const [nextId, setNextId] = useState("");
   const [nextCode, setNextCode] = useState("");
   const classes = useStyles();
+  let words; let win; let name;
+  if (!location.state) {
+    words = JSON.parse(sessionStorage.getItem("words"));
+    win = sessionStorage.getItem("win");
+    name = sessionStorage.getItem("name");
+  } else {
+    words = location.state.words;
+    win = location.state.win;
+    name = location.state.name;
+  }
   const statement = win ? "You Win!" : "You Lose";
+
   useEffect(() => {
     const createNextGame = async () => {
       const ref = await getGameRef(code);
       const data = ref.data();
       setNextCode(data.nextCode);
-      if (data.players[0] === id) { console.log("rg1 created!"); createGame(data.nextCode); }
+      if (data.players[0] === id) {
+        const nextRef = await getGameRef(data.nextCode);
+        if (!nextRef.exists) {
+          createGame(data.nextCode);
+        }
+      }
     };
     createNextGame();
   }, []);
+
   return !done ? (
     <div>
       <Box display="flex" flexDirection="column" alignItems="center" mt={2}>

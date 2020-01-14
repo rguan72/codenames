@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -34,12 +34,17 @@ const useStyles = makeStyles(() => ({
 
 
 export default function Home() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(sessionStorage.getItem("name") || "");
   const [code, setCode] = useState("");
   const [pid, setPID] = useState("");
   const [done, setDone] = useState(false);
   const props = { name };
   const classes = useStyles(props);
+
+  useEffect(() => {
+    sessionStorage.setItem("name", name);
+  }, [name]);
+
   return !done ? (
     <div>
       <TextField

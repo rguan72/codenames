@@ -25,3 +25,13 @@ export const enabledCard = () => (
     }}
   />
 );
+
+export const longWords = () => (
+  <GameCard
+    code="pd0a"
+    disabled={false}
+    word={{
+      flipped: false, id: "Gp7fhDUlxQWbSx79yIUw", type: "BEIGE", value: "Reimbursement"
+    }}
+  />
+);

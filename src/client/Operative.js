@@ -24,7 +24,15 @@ export default function Operative(props) {
   const [myTurn, setMyTurn] = useState(false);
   const [game, setGame] = useState({});
   const { code, id } = props.match.params;
-  const { team, name } = props.location.state;
+  let team;
+  let name;
+  if (!props.location.state) {
+    team = sessionStorage.getItem("team");
+    name = sessionStorage.getItem("name");
+  } else {
+    team = props.location.state.team;
+    name = props.location.state.name;
+  }
   const classes = useStyles();
 
   useEffect(() => {
@@ -46,6 +54,10 @@ export default function Operative(props) {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("words", JSON.stringify(words));
+  }, [words]);
 
   function handleClick(i) {
     const wordsCopy = words.slice();
@@ -121,8 +133,15 @@ export default function Operative(props) {
     slidesToScroll: 1,
     arrows: true
   };
-  if (game.winner && team === game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
-  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+
+  if (game.winner && team === game.winner) {
+    sessionStorage.setItem("win", true);
+    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+  }
+  if (game.winner && team !== game.winner) {
+    sessionStorage.setItem("win", false);
+    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+  }
 
   return (
     <div>

@@ -29,8 +29,12 @@ export default function Join({ location }) {
   const [valid, setValid] = useState(false);
   const [done, setDone] = useState(false);
   const [pid, setPID] = useState("");
-  const { name } = location;
+  let name;
+
+  if (location.name) name = location.name;
+  else name = sessionStorage.getItem("name");
   const classes = useStyles();
+
   return !done ? (
     <div>
       <Typography variant="h3" className={classes.mar}>
