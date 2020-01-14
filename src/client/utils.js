@@ -34,14 +34,13 @@ function addPlayer(gameCode, name) {
       ready: false,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
-    .then(() => {
-      db
-        .collection("games")
-        .doc(gameCode)
-        .update({
-          players: firebase.firestore.FieldValue.arrayUnion(id),
-          numPlayers: firebase.firestore.FieldValue.increment(1),
-        });
+    .catch(err => console.log(err));
+  db
+    .collection("games")
+    .doc(gameCode)
+    .update({
+      players: firebase.firestore.FieldValue.arrayUnion(id),
+      numPlayers: firebase.firestore.FieldValue.increment(1),
     })
     .catch(err => console.log(err));
   return id;
