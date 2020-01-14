@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
 import Guide from "./components/guide";
+import PlayAgain from "./components/playAgain";
+import { getGameRef, createGame, addPlayer } from "./utils";
 
 const useStyles = makeStyles({
   marL1: {
@@ -12,20 +13,37 @@ const useStyles = makeStyles({
   },
 });
 
-export default function End(props) {
-  const { words, win } = props.location.state;
+export default function End({ location, match }) {
+  const { words, win, name } = location.state;
+  const { code, id } = match.params;
+  const [done, setDone] = useState(false);
+  const [nextId, setNextId] = useState("");
+  const [nextCode, setNextCode] = useState("");
   const classes = useStyles();
   const statement = win ? "You Win!" : "You Lose";
-  return (
+  useEffect(() => {
+    const createNextGame = async () => {
+      const ref = await getGameRef(code);
+      const data = ref.data();
+      setNextCode(data.nextCode);
+      if (data.players[0] === id) { console.log("rg1 created!"); createGame(data.nextCode); }
+    };
+    createNextGame();
+  }, []);
+  return !done ? (
     <div>
       <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
         <Typography variant="h3" className={classes.marL1}>
           {statement}
         </Typography>
         <Box display="flex" justifyContent="center" alignItems="center" ml={2} mb={1}>
-          <Link component={RouterLink} to="/">
-            <Typography variant="h6"> Play Again </Typography>
-          </Link>
+          <PlayAgain
+            onClick={() => {
+              setNextId(addPlayer(nextCode, name));
+              setDone(true);
+            }
+            }
+          />
         </Box>
       </Box>
       <Box display="flex" justifyContent="center">
@@ -45,5 +63,5 @@ export default function End(props) {
         </Box>
       </Box>
     </div>
-  );
+  ) : <Redirect to={{ pathname: `/lobby/${nextCode}/${nextId}`, name }} />;
 }

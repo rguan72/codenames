@@ -133,9 +133,8 @@ function isToday(someDate) {
   return (new Date() - someDate) < oneDay;
 }
 
-function createGame(name) {
+function createGame(gameCode) {
   const db = firebase_.firestore();
-  const gameCode = genCode();
   const docRef = db.collection("games").doc(gameCode);
   const redTurn = Math.random() > 0.5;
   docRef.get().then(doc => {
@@ -150,13 +149,12 @@ function createGame(name) {
         players: [],
         redFlipped: 0,
         blueFlipped: 0,
-        winner: null
+        winner: null,
+        nextCode: genCode(),
       });
     }
   });
   addWords(gameCode, redTurn);
-  const id = addPlayer(gameCode, name);
-  return { gameCode, id };
 }
 
 function checkValid(gameCode) {
@@ -210,7 +208,6 @@ function monitorPlayers(gameCode, setPlayers) {
     });
 }
 
-
 function monitorGame(code, setGame) {
   const db = firebase_.firestore();
   return db
@@ -221,6 +218,23 @@ function monitorGame(code, setGame) {
     });
 }
 
+function getGameRef(code) {
+  const db = firebase_.firestore();
+  return db
+    .collection("games")
+    .doc(code)
+    .get();
+}
+
 export {
-  genCode, addPlayer, addWords, createGame, checkValid, wordComp, monitorWords, monitorGame, monitorPlayers
+  genCode,
+  addPlayer,
+  addWords,
+  createGame,
+  checkValid,
+  wordComp,
+  monitorWords,
+  monitorGame,
+  monitorPlayers,
+  getGameRef
 };

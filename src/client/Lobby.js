@@ -36,6 +36,7 @@ export default function Lobby(props) {
   const [role, setRole] = useState(roles.SPYMASTER);
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
+  const { name } = props.location;
   const { id, code } = props.match.params;
 
   useEffect(() => {
@@ -142,7 +143,7 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
+        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
           <Button disabled={!allReady} variant="contained">Start</Button>
         </Link>
       </Box>

@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import OutLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { createGame } from "./utils";
+import { createGame, genCode, addPlayer } from "./utils";
 
 const useStyles = makeStyles(() => ({
   bar: {
@@ -56,7 +56,9 @@ export default function Home() {
           variant="contained"
           size="large"
           onClick={() => {
-            const { id, gameCode } = createGame(name);
+            const gameCode = genCode();
+            createGame(gameCode, name);
+            const id = addPlayer(gameCode, name);
             setCode(gameCode);
             setPID(id);
             setDone(true);
@@ -101,6 +103,6 @@ export default function Home() {
       </Box>
     </div>
   ) : (
-    <Redirect to={{ pathname: `/lobby/${code}/${pid}` }} />
+    <Redirect to={{ pathname: `/lobby/${code}/${pid}`, name }} />
   );
 }

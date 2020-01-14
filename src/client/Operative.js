@@ -23,8 +23,8 @@ export default function Operative(props) {
   const [words, setWords] = useState(Array(20).fill(null));
   const [myTurn, setMyTurn] = useState(false);
   const [game, setGame] = useState({});
-  const { code } = props.match.params;
-  const { team } = props.location.state;
+  const { code, id } = props.match.params;
+  const { team, name } = props.location.state;
   const classes = useStyles();
 
   useEffect(() => {
@@ -121,8 +121,8 @@ export default function Operative(props) {
     slidesToScroll: 1,
     arrows: true
   };
-  if (game.winner && team === game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: true } }} />;
-  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: false } }} />;
+  if (game.winner && team === game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
 
   return (
     <div>

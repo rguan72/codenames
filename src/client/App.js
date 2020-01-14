@@ -34,7 +34,7 @@ export default function App() {
         <Route path="/lobby/:code/:id" component={Lobby} />
         <Route path="/operative/:code/:id" component={Operative} />
         <Route path="/spymaster/:code/:id" component={Spymaster} />
-        <Route path="/end" component={End} />
+        <Route path="/end/:code/:id" component={End} />
         <Route path="/join" component={Join} />
       </HashRouter>
     </div>

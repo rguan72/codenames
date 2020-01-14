@@ -10,8 +10,8 @@ import { teams } from "./constants";
 export default function Spymaster(props) {
   const [words, setWords] = useState([]);
   const [game, setGame] = useState({});
-  const { code } = props.match.params;
-  const { team } = props.location.state;
+  const { code, id } = props.match.params;
+  const { team, name } = props.location.state;
 
   useEffect(() => {
     const unsubscribe = monitorWords(code, setWords);
@@ -23,8 +23,8 @@ export default function Spymaster(props) {
     return () => unsubscribe();
   }, []);
 
-  if (game.winner && team === game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: true } }} />;
-  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: "/end", state: { words, win: false } }} />;
+  if (game.winner && team === game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+  if (game.winner && team !== game.winner) return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
 
   const turnString = ((game.redTurn && team === teams.RED) || (!game.redTurn && team === teams.BLUE)) ? "Your Turn" : "Their Turn";
 

@@ -29,6 +29,7 @@ export default function Join({ location }) {
   const [valid, setValid] = useState(false);
   const [done, setDone] = useState(false);
   const [pid, setPID] = useState("");
+  const { name } = location;
   const classes = useStyles();
   return !done ? (
     <div>
@@ -36,7 +37,7 @@ export default function Join({ location }) {
         {" "}
         Welcome,
         {" "}
-        {location.name}
+        {name}
       </Typography>
       <TextField
         label="Game Code"
@@ -55,7 +56,7 @@ export default function Join({ location }) {
         className={classes.marTop}
         disabled={!valid}
         onClick={() => {
-          const id = addPlayer(code, location.name);
+          const id = addPlayer(code, name);
           setPID(id);
           setDone(true);
         }}
@@ -64,5 +65,5 @@ export default function Join({ location }) {
       </Button>
       { !valid && <Typography variant="h6" className={`${classes.mar} ${classes.marTopSm}`}> Game Code does not exist </Typography> }
     </div>
-  ) : <Redirect to={{ pathname: `/lobby/${code}/${pid}` }} />;
+  ) : <Redirect to={{ pathname: `/lobby/${code}/${pid}`, name }} />;
 }
