@@ -9,13 +9,19 @@ import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase/app";
 import GameCard from "./components/card";
-import { monitorWords, monitorGame, wordComp } from "./utils";
+import { monitorWords, monitorGame } from "./utils";
 import { teams } from "./constants";
 import firebase_ from "./Firebase";
 
 const useStyles = makeStyles({
   mar: {
     marginLeft: 50
+  },
+  marL: {
+    marginLeft: 15
+  },
+  marR: {
+    marginRight: 15
   }
 });
 
@@ -120,6 +126,10 @@ export default function Operative(props) {
       <Box key={i}>
         {renderCard(4 * i)}
         {renderCard(4 * i + 1)}
+        <Box display="flex" justifyContent="space-between">
+          <FontAwesomeIcon icon="arrow-left" size="lg" className={classes.marL} />
+          <FontAwesomeIcon icon="arrow-right" size="lg" className={classes.marR} />
+        </Box>
         {renderCard(4 * i + 2)}
         {renderCard(4 * i + 3)}
       </Box>
@@ -147,7 +157,7 @@ export default function Operative(props) {
     <div>
       <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
-        <Button variant="outlined" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large" color="primary"> End Turn </Button>
+        <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>
       </Box>
       <Slider {...settings}>
         {boardItems}
