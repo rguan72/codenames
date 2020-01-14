@@ -1,0 +1,4 @@
+[[redirects]]
+    from = https://codenames.richardguan.me/*
+    to = https://codenames.co/:splat
+    status = 301

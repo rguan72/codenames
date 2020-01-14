@@ -1,4 +1,0 @@
-# These rules will change if you change your site’s custom domains or HTTPS settings
-
-# Redirect domain aliases to primary domain
-https://codenames.richardguan.me/* https://codenames.co/:splat 301!

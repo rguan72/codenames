@@ -52,7 +52,6 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: "public/*.png", to: "dist" },
-      { from: "public/_redirects", to: "dist" }
     ]),
     new Dotenv(),
     new webpack.DefinePlugin(env.stringified)
