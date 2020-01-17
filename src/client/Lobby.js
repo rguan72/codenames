@@ -12,7 +12,7 @@ import Player from "./components/player";
 import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
-import { monitorPlayers, monitorGame } from "./utils";
+import { monitorPlayers, monitorGame, monitorThisPlayer } from "./utils";
 
 const useStyles = makeStyles(() => ({
   margin: {
@@ -33,12 +33,11 @@ const useStyles = makeStyles(() => ({
 export default function Lobby(props) {
   const classes = useStyles();
   const [players, setPlayers] = useState([]);
-  const [team, setTeam] = useState(teams.RED);
-  const [role, setRole] = useState(roles.SPYMASTER);
+  const [team, setTeam] = useState(props.location.team ? props.location.team : teams.RED);
+  const [role, setRole] = useState(props.location.role ? props.location.role : roles.SPYMASTER);
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
   const { id, code } = props.match.params;
-  let name;
 
   if (props.location.name) name = props.location.name;
   else name = sessionStorage.getItem("name");
@@ -54,8 +53,17 @@ export default function Lobby(props) {
   }, []);
 
   useEffect(() => {
+    const unsubscribe = monitorThisPlayer(id, setTeam, setRole, setReady);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     sessionStorage.setItem("team", team);
   }, [team]);
+
+  useEffect(() => {
+    sessionStorage.setItem("role", role);
+  }, [role]);
 
   function setPlayerTeam(selTeam) {
     const db = firebase_.firestore();

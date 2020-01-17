@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Guide from "./components/guide";
 import TopBar from "./components/topbar";
 import { monitorWords, monitorGame } from "./utils";
-import { teams } from "./constants";
+import { teams, roles } from "./constants";
 
 export default function Spymaster(props) {
   const [words, setWords] = useState([]);
@@ -36,13 +36,33 @@ export default function Spymaster(props) {
     sessionStorage.setItem("words", JSON.stringify(words));
   }, [words]);
 
+  useEffect(() => {
+    sessionStorage.setItem("role", roles.SPYMASTER);
+  });
+
   if (game.winner && team === game.winner) {
     sessionStorage.setItem("win", true);
-    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+    return (
+      <Redirect to={{
+        pathname: `/end/${code}/${id}`,
+        state: {
+          words, win: true, name, team, role: roles.SPYMASTER
+        }
+      }}
+      />
+    );
   }
   if (game.winner && team !== game.winner) {
     sessionStorage.setItem("win", false);
-    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+    return (
+      <Redirect to={{
+        pathname: `/end/${code}/${id}`,
+        state: {
+          words, win: false, name, team, role: roles.SPYMASTER
+        }
+      }}
+      />
+    );
   }
 
   const turnString = ((game.redTurn && team === teams.RED) || (!game.redTurn && team === teams.BLUE)) ? "Your Turn" : "Their Turn";

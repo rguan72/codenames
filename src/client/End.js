@@ -22,15 +22,19 @@ export default function End({ location, match }) {
   const [nextId, setNextId] = useState("");
   const [nextCode, setNextCode] = useState("");
   const classes = useStyles();
-  let words; let win; let name;
+  let words; let win; let name; let team; let role;
   if (!location.state) {
     words = JSON.parse(sessionStorage.getItem("words"));
     win = JSON.parse(sessionStorage.getItem("win"));
     name = sessionStorage.getItem("name");
+    team = sessionStorage.getItem("team");
+    role = sessionStorage.getItem("role");
   } else {
     words = location.state.words;
     win = location.state.win;
     name = location.state.name;
+    team = location.state.team;
+    role = location.state.role;
   }
   const statement = win ? "You Win!" : "You Lose";
 
@@ -63,7 +67,7 @@ export default function End({ location, match }) {
             onClick={() => {
               const newId = genID();
               setNextId(newId);
-              addPlayer(nextCode, newId, name);
+              addPlayer(nextCode, newId, name, { team, role });
               setDone(true);
             }
             }
@@ -87,5 +91,10 @@ export default function End({ location, match }) {
         </Box>
       </Box>
     </div>
-  ) : <Redirect to={{ pathname: `/lobby/${nextCode}/${nextId}`, name }} />;
+  ) : (
+    <Redirect to={{
+      pathname: `/lobby/${nextCode}/${nextId}`, name, team, role
+    }}
+    />
+  );
 }

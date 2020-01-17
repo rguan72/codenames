@@ -11,7 +11,7 @@ import firebase from "firebase/app";
 import GameCard from "./components/card";
 import TopBar from "./components/topbar";
 import { monitorWords, monitorGame } from "./utils";
-import { teams } from "./constants";
+import { teams, roles } from "./constants";
 import firebase_ from "./Firebase";
 
 const useStyles = makeStyles({
@@ -65,6 +65,10 @@ export default function Operative(props) {
   useEffect(() => {
     sessionStorage.setItem("words", JSON.stringify(words));
   }, [words]);
+
+  useEffect(() => {
+    sessionStorage.setItem("role", roles.OPERATIVE);
+  }, []);
 
   function handleClick(i) {
     const wordsCopy = words.slice();
@@ -147,11 +151,27 @@ export default function Operative(props) {
 
   if (game.winner && team === game.winner) {
     sessionStorage.setItem("win", true);
-    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: true, name } }} />;
+    return (
+      <Redirect to={{
+        pathname: `/end/${code}/${id}`,
+        state: {
+          words, win: true, name, team, role: roles.OPERATIVE
+        }
+      }}
+      />
+    );
   }
   if (game.winner && team !== game.winner) {
     sessionStorage.setItem("win", false);
-    return <Redirect to={{ pathname: `/end/${code}/${id}`, state: { words, win: false, name } }} />;
+    return (
+      <Redirect to={{
+        pathname: `/end/${code}/${id}`,
+        state: {
+          words, win: false, name, team, role: roles.OPERATIVE
+        }
+      }}
+      />
+    );
   }
 
   return (
