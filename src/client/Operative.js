@@ -28,7 +28,6 @@ const useStyles = makeStyles({
 
 export default function Operative(props) {
   const [words, setWords] = useState(Array(20).fill(null));
-  const [myTurn, setMyTurn] = useState(false);
   const [game, setGame] = useState({});
   const { code, id } = props.match.params;
   let team;
@@ -41,6 +40,7 @@ export default function Operative(props) {
     name = props.location.state.name;
   }
   const classes = useStyles();
+  const myTurn = (team === teams.RED && game.redTurn) || (team === teams.BLUE && !game.redTurn);
 
   useEffect(() => {
     const unsubscribe = monitorWords(code, setWords);
@@ -49,16 +49,6 @@ export default function Operative(props) {
 
   useEffect(() => {
     const unsubscribe = monitorGame(code, setGame);
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const db = firebase_.firestore();
-    const unsubscribe = db.collection("games").doc(code).onSnapshot((docRef) => {
-      const data = docRef.data();
-      setMyTurn((team === teams.RED && data.redTurn)
-        || (team === teams.BLUE && !data.redTurn));
-    });
     return () => unsubscribe();
   }, []);
 
