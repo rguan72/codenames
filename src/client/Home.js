@@ -6,6 +6,7 @@ import Box from "@material-ui/core/Box";
 import OutLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import TopBar from "./components/topbar";
 import {
   createGame, genCode, genID, redTurn, addWords, createPlayer, addPlayerToGame
 } from "./utils";
@@ -49,6 +50,7 @@ export default function Home() {
 
   return !done ? (
     <div>
+      <TopBar />
       <TextField
         id="outlined-basic"
         label="Name"

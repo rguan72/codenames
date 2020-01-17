@@ -9,6 +9,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import firebase from "firebase/app";
 import Player from "./components/player";
+import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
 import { monitorPlayers, monitorGame } from "./utils";
@@ -108,6 +109,7 @@ export default function Lobby(props) {
 
   return (
     <div>
+      <TopBar />
       <Box display="flex" mb={-2}>
         <Typography variant="h4" className={classes.margin}>
           Game Code:
