@@ -4,6 +4,7 @@ import Box from "@material-ui/core/Box";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Typography from "@material-ui/core/Typography";
 import Guide from "./components/guide";
+import TopBar from "./components/topbar";
 import { monitorWords, monitorGame } from "./utils";
 import { teams } from "./constants";
 
@@ -48,6 +49,7 @@ export default function Spymaster(props) {
 
   return (
     <div>
+      <TopBar />
       <Box display="flex" justifyContent="center" mt={2}>
         <FontAwesomeIcon icon="brain" color={team} size="2x" />
         <Box m={1} mt={0}>

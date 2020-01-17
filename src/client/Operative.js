@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase/app";
 import GameCard from "./components/card";
+import TopBar from "./components/topbar";
 import { monitorWords, monitorGame } from "./utils";
 import { teams } from "./constants";
 import firebase_ from "./Firebase";
@@ -155,6 +156,7 @@ export default function Operative(props) {
 
   return (
     <div>
+      <TopBar />
       <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
         <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>

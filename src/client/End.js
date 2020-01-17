@@ -4,6 +4,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Guide from "./components/guide";
+import TopBar from "./components/topbar";
 import PlayAgain from "./components/playAgain";
 import {
   getGameRef, createGame, addPlayer, genID, redTurn, addWords
@@ -52,6 +53,7 @@ export default function End({ location, match }) {
 
   return !done ? (
     <div>
+      <TopBar link />
       <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
         <Typography variant="h3" className={classes.marL1}>
           {statement}
