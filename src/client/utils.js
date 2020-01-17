@@ -29,7 +29,7 @@ function redTurn() {
   return Math.random() > 0.5;
 }
 
-function createPlayer(gameCode, id, name) {
+function createPlayer(gameCode, id, name, opts) {
   const db = firebase_.firestore();
   return db
     .collection("players")
@@ -37,8 +37,8 @@ function createPlayer(gameCode, id, name) {
     .set({
       name,
       gameCode,
-      team: teams.RED,
-      role: roles.SPYMASTER,
+      team: opts && opts.team ? opts.team : teams.RED,
+      role: opts && opts.role ? opts.role : roles.SPYMASTER,
       ready: false,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
@@ -57,9 +57,9 @@ function addPlayerToGame(gameCode, id) {
     .catch(err => console.log(err));
 }
 
-function addPlayer(gameCode, id, name) {
+function addPlayer(gameCode, id, name, opts) {
   const promises = [
-    createPlayer(gameCode, id, name),
+    createPlayer(gameCode, id, name, opts),
     addPlayerToGame(gameCode, id)
   ];
   return Promise.all(promises);
@@ -225,6 +225,22 @@ function monitorPlayers(gameCode, setPlayers) {
     });
 }
 
+function monitorThisPlayer(id, setTeam, setRole, setReady) {
+  const db = firebase_.firestore();
+  return db
+    .collection("players")
+    .doc(id)
+    .onSnapshot((doc) => {
+      if (doc.exists) {
+        const player = doc.data();
+        if (setTeam) setTeam(player.team);
+        if (setRole) setRole(player.role);
+        if (setReady) setReady(player.ready);
+      }
+    });
+}
+
+
 function monitorGame(code, setGame) {
   const db = firebase_.firestore();
   return db
@@ -257,5 +273,6 @@ export {
   monitorWords,
   monitorGame,
   monitorPlayers,
+  monitorThisPlayer,
   getGameRef
 };
