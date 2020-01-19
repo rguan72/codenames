@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TopBar from "./components/topbar";
 import { addPlayer, checkValid, genID } from "./utils";
+import { logJoinGame } from "./analytics";
 
 const useStyles = makeStyles({
   mar: {
@@ -62,6 +63,7 @@ export default function Join({ location }) {
         className={classes.marTop}
         disabled={!valid}
         onClick={() => {
+          logJoinGame();
           const id = genID();
           addPlayer(code, id, name);
           setPID(id);

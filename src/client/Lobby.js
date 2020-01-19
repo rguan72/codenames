@@ -13,6 +13,7 @@ import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
 import { monitorPlayers, monitorGame, monitorThisPlayer } from "./utils";
+import { logGameStarted } from "./analytics";
 
 const useStyles = makeStyles(() => ({
   margin: {
@@ -98,6 +99,7 @@ export default function Lobby(props) {
   function handleClick(e, areAllReady) {
     if (!areAllReady) e.preventDefault();
     else setGameStarted();
+    logGameStarted();
   }
 
   const allReady = game && game.numPlayers > 0 && game.numReady === game.numPlayers;

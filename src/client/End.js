@@ -9,6 +9,7 @@ import PlayAgain from "./components/playAgain";
 import {
   getGameRef, createGame, addPlayer, genID, redTurn, addWords
 } from "./utils";
+import { logGameCompleted, logPlayAgain } from "./analytics";
 
 const useStyles = makeStyles({
   marL1: {
@@ -49,6 +50,7 @@ export default function End({ location, match }) {
           const isRedTurn = redTurn();
           createGame(data.nextCode, isRedTurn);
           addWords(data.nextCode, isRedTurn);
+          logGameCompleted();
         }
       }
     };
@@ -65,6 +67,7 @@ export default function End({ location, match }) {
         <Box display="flex" justifyContent="center" alignItems="center" ml={2} mb={1}>
           <PlayAgain
             onClick={() => {
+              logPlayAgain();
               const newId = genID();
               setNextId(newId);
               addPlayer(nextCode, newId, name, { team, role });

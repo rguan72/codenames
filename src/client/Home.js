@@ -10,6 +10,7 @@ import TopBar from "./components/topbar";
 import {
   createGame, genCode, genID, redTurn, addWords, createPlayer, addPlayerToGame
 } from "./utils";
+import { logNewGame } from "./analytics";
 
 const useStyles = makeStyles(() => ({
   bar: {
@@ -65,6 +66,7 @@ export default function Home() {
           variant="contained"
           size="large"
           onClick={() => {
+            logNewGame();
             const gameCode = genCode();
             const id = genID();
             const isRedTurn = redTurn();
