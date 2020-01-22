@@ -47,6 +47,10 @@ export default function Join({ location }) {
         {name}
       </Typography>
       <TextField
+        autoComplete="off"
+        inputProps={{
+          autoCapitalize: "none"
+        }}
         label="Game Code"
         className={`${classes.mar} ${classes.marTop} ${classes.noMarRight} ${classes.marBotZero}`}
         onChange={event => {
