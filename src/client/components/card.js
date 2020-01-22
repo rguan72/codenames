@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: props => (props.word ? types[props.word.type] : "#ffffff")
   },
   basis: {
-    minHeight: 110,
+    minHeight: 101.6,
   },
   disabled: {
     backgroundColor: "#e0e0e0",
