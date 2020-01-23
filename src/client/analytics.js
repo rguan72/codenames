@@ -8,6 +8,10 @@ function logJoinGame() {
   firebase_.analytics().logEvent("player_joined");
 }
 
+function logRejoinGame() {
+  firebase_.analytics().logEvent("game_rejoined");
+}
+
 function logGameStarted() {
   firebase_.analytics().logEvent("game_started");
 }
@@ -22,5 +26,5 @@ function logPlayAgain() {
 
 
 export {
-  logNewGame, logJoinGame, logGameStarted, logGameCompleted, logPlayAgain
+  logNewGame, logJoinGame, logGameStarted, logGameCompleted, logPlayAgain, logRejoinGame
 };

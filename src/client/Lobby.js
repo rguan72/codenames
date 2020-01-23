@@ -12,7 +12,9 @@ import Player from "./components/player";
 import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
 import { teams, roles } from "./constants";
-import { monitorPlayers, monitorGame, monitorThisPlayer } from "./utils";
+import {
+  monitorPlayers, monitorGame, monitorThisPlayer, setRemoteGame
+} from "./utils";
 import { logGameStarted } from "./analytics";
 
 const useStyles = makeStyles(() => ({
@@ -39,9 +41,10 @@ export default function Lobby(props) {
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
   const { id, code } = props.match.params;
+  let playerName;
 
-  if (props.location.name) name = props.location.name;
-  else name = sessionStorage.getItem("name");
+  if (props.location.name) playerName = props.location.name;
+  else playerName = sessionStorage.getItem("name");
 
   useEffect(() => {
     const unsubscribe = monitorPlayers(code, setPlayers);
@@ -89,16 +92,9 @@ export default function Lobby(props) {
     else db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(-1) });
   }
 
-  function setGameStarted() {
-    const db = firebase_.firestore();
-    db.collection("games")
-      .doc(code)
-      .update({ started: true });
-  }
-
   function handleClick(e, areAllReady) {
     if (!areAllReady) e.preventDefault();
-    else setGameStarted();
+    else setRemoteGame(code, { started: true });
     logGameStarted();
   }
 
@@ -115,7 +111,7 @@ export default function Lobby(props) {
     </Box>
   ));
 
-  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} />;
+  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, playerName } }} />;
 
   return (
     <div>
@@ -173,7 +169,7 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
+        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, playerName } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
           <Button disabled={!allReady} variant="contained">Start</Button>
         </Link>
       </Box>
