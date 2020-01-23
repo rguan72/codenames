@@ -34,6 +34,10 @@ const useStyles = makeStyles({
   dotGroup: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  smooth: {
+    transitionTimingFunction: "ease-in-out",
+    transitionDuration: ".4s"
   }
 });
 
@@ -195,7 +199,7 @@ export default function Operative(props) {
         totalSlides={5}
         infinite
       >
-        <Slider>{boardItems}</Slider>
+        <Slider classNameAnimation={classes.smooth}>{boardItems}</Slider>
         <Box display="flex" justifyContent="space-between">
           <ButtonBack className={classes.noButton}>
             <PrevArrow />
