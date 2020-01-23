@@ -8,6 +8,9 @@ const styles = {
     backgroundColor: "Transparent",
     outline: "none",
     border: "none",
+  },
+  fontSizeSm: {
+    fontSize: ".4rem"
   }
 };
 
@@ -19,7 +22,7 @@ class MyDot extends React.Component {
         <FontAwesomeIcon
           icon="circle"
           opacity={(slide === currentSlide) ? "1.0" : "0.20"}
-          size="sm"
+          className={classes.fontSizeSm}
         />
       </Dot>
     );

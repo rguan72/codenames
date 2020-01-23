@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   smooth: {
     transitionTimingFunction: "ease-in-out",
     transitionDuration: ".4s"
-  }
+  },
 });
 
 export default function Operative(props) {
@@ -208,7 +208,7 @@ export default function Operative(props) {
             <NextArrow />
           </ButtonNext>
         </Box>
-        <Box display="flex" justifyContent="space-between" pt={1.3} p={1.8}>
+        <Box display="flex" justifyContent="space-between" pt={0.2} p={10}>
           {dots}
         </Box>
       </CarouselProvider>
