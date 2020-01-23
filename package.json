@@ -4,8 +4,8 @@
   "description": "Online version of the popular party game Codenames.",
   "main": "src/server/index.js",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/rguan72/codenames"
+    "type" : "git",
+    "url" : "https://github.com/rguan72/codenames"
   },
   "scripts": {
     "build": "webpack --mode production",
@@ -31,7 +31,6 @@
     "express": "^4.16.3",
     "firebase": "^7.6.1",
     "image-webpack-loader": "^6.0.0",
-    "pure-react-carousel": "^1.24.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router": "^5.1.2",
