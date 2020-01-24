@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -39,6 +39,7 @@ export default function Operative(props) {
     team = props.location.state.team;
     name = props.location.state.name;
   }
+  const slider = React.createRef();
   const classes = useStyles();
   const myTurn = (team === teams.RED && game.redTurn) || (team === teams.BLUE && !game.redTurn);
 
@@ -107,11 +108,13 @@ export default function Operative(props) {
 
   function renderCard(i) {
     return (
-      <GameCard
-        word={words[i]}
-        disabled={!myTurn}
-        onClick={() => handleClick(i)}
-      />
+      <Box mb={((i % 4) === 3) ? 0.3 : 2.4}>
+        <GameCard
+          word={words[i]}
+          disabled={!myTurn}
+          onClick={() => handleClick(i)}
+        />
+      </Box>
     );
   }
 
@@ -121,12 +124,12 @@ export default function Operative(props) {
       <Box key={i}>
         {renderCard(4 * i)}
         {renderCard(4 * i + 1)}
-        <Box display="flex" justifyContent="space-between">
-          <FontAwesomeIcon icon="arrow-left" size="lg" className={classes.marL} />
-          <FontAwesomeIcon icon="arrow-right" size="lg" className={classes.marR} />
-        </Box>
         {renderCard(4 * i + 2)}
         {renderCard(4 * i + 3)}
+        <Box display="flex" justifyContent="space-between">
+          <FontAwesomeIcon icon="arrow-left" size="2x" className={classes.marL} onClick={() => { slider.current.slickPrev(); }} />
+          <FontAwesomeIcon icon="arrow-right" size="2x" className={classes.marR} onClick={() => { slider.current.slickNext(); }} />
+        </Box>
       </Box>
     );
   }
@@ -136,7 +139,6 @@ export default function Operative(props) {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: true
   };
 
   if (game.winner && team === game.winner) {
@@ -171,7 +173,7 @@ export default function Operative(props) {
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
         <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>
       </Box>
-      <Slider {...settings}>
+      <Slider {...settings} ref={slider}>
         {boardItems}
       </Slider>
     </div>
