@@ -56,6 +56,7 @@ export default function Home() {
         id="outlined-basic"
         label="Name"
         size="medium"
+        value={name}
         className={classes.field}
         onChange={event => {
           setName(event.target.value);
