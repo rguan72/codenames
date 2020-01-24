@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase/app";
 import GameCard from "./components/card";
 import TopBar from "./components/topbar";
-import { PrevArrow, NextArrow } from "./components/arrow";
-import Dot from "./components/dot";
 import { monitorWords, monitorGame } from "./utils";
 import { teams, roles } from "./constants";
 import firebase_ from "./Firebase";
@@ -25,15 +18,11 @@ const useStyles = makeStyles({
   mar: {
     marginLeft: 50
   },
-  noButton: {
-    backgroundColor: "Transparent",
-    outline: "none",
-    border: "none",
-    marginTop: 15
+  marL: {
+    marginLeft: 15
   },
-  dotGroup: {
-    display: "flex",
-    justifyContent: "space-between"
+  marR: {
+    marginRight: 15
   }
 });
 
@@ -50,6 +39,7 @@ export default function Operative(props) {
     team = props.location.state.team;
     name = props.location.state.name;
   }
+  const slider = React.createRef();
   const classes = useStyles();
   const myTurn = (team === teams.RED && game.redTurn) || (team === teams.BLUE && !game.redTurn);
 
@@ -118,34 +108,38 @@ export default function Operative(props) {
 
   function renderCard(i) {
     return (
-      <GameCard
-        word={words[i]}
-        disabled={!myTurn}
-        onClick={() => handleClick(i)}
-      />
+      <Box mb={((i % 4) === 3) ? 0.3 : 2.4}>
+        <GameCard
+          word={words[i]}
+          disabled={!myTurn}
+          onClick={() => handleClick(i)}
+        />
+      </Box>
     );
   }
 
   const boardItems = [];
   for (let i = 0; i < 5; i += 1) {
     boardItems.push(
-      <Slide key={i} index={i}>
-        <Box>
-          {renderCard(4 * i)}
-          {renderCard(4 * i + 1)}
-          {renderCard(4 * i + 2)}
-          {renderCard(4 * i + 3)}
+      <Box key={i}>
+        {renderCard(4 * i)}
+        {renderCard(4 * i + 1)}
+        {renderCard(4 * i + 2)}
+        {renderCard(4 * i + 3)}
+        <Box display="flex" justifyContent="space-between">
+          <FontAwesomeIcon icon="arrow-left" size="2x" className={classes.marL} onClick={() => { slider.current.slickPrev(); }} />
+          <FontAwesomeIcon icon="arrow-right" size="2x" className={classes.marR} onClick={() => { slider.current.slickNext(); }} />
         </Box>
-      </Slide>
+      </Box>
     );
   }
-
-  const dots = [];
-  for (let i = 0; i < 5; i += 1) {
-    dots.push(
-      <Dot slide={i} key={i} />
-    );
-  }
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   if (game.winner && team === game.winner) {
     sessionStorage.setItem("win", true);
@@ -177,37 +171,11 @@ export default function Operative(props) {
       <TopBar />
       <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
-        <Button
-          variant="contained"
-          disabled={!myTurn}
-          onClick={endTurn}
-          className={classes.mar}
-          size="large"
-        >
-          {" "}
-          End Turn
-          {" "}
-        </Button>
+        <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>
       </Box>
-      <CarouselProvider
-        naturalSlideWidth={100}
-        naturalSlideHeight={125}
-        totalSlides={5}
-        infinite
-      >
-        <Slider>{boardItems}</Slider>
-        <Box display="flex" justifyContent="space-between">
-          <ButtonBack className={classes.noButton}>
-            <PrevArrow />
-          </ButtonBack>
-          <ButtonNext className={classes.noButton}>
-            <NextArrow />
-          </ButtonNext>
-        </Box>
-        <Box display="flex" justifyContent="space-between" pt={1.3} p={1.8}>
-          {dots}
-        </Box>
-      </CarouselProvider>
+      <Slider {...settings} ref={slider}>
+        {boardItems}
+      </Slider>
     </div>
   );
 }
