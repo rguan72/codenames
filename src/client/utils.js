@@ -259,6 +259,22 @@ function getGameRef(code) {
     .get();
 }
 
+function getPlayerRef(code, name) {
+  const db = firebase_.firestore();
+  return db
+    .collection("players")
+    .where("gameCode", "==", code)
+    .where("name", "==", name)
+    .get();
+}
+
+function setRemoteGame(code, game) {
+  const db = firebase_.firestore();
+  return db.collection("games")
+    .doc(code)
+    .update(game);
+}
+
 export {
   genCode,
   genID,
@@ -274,5 +290,7 @@ export {
   monitorGame,
   monitorPlayers,
   monitorThisPlayer,
-  getGameRef
+  getGameRef,
+  getPlayerRef,
+  setRemoteGame
 };
