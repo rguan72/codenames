@@ -108,7 +108,7 @@ export default function Operative(props) {
 
   function renderCard(i) {
     return (
-      <Box mb={((i % 4) === 3) ? 0.3 : 2.4}>
+      <Box mb={((i % 4) === 3) ? 0.3 : 4.5}>
         <GameCard
           word={words[i]}
           disabled={!myTurn}
