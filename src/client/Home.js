@@ -15,6 +15,9 @@ const useStyles = makeStyles(() => ({
   },
   noDecor: {
     textDecoration: "none"
+  },
+  min70: {
+    minWidth: 70
   }
 }));
 
@@ -45,26 +48,29 @@ export default function Home() {
           </Button>
         </Link>
       </Box>
-      <Box display="flex" flexDirection="column" ml="13.1vw" mt="14vh">
-        <Typography variant="subtitle2">
+      <Box display="flex" justifyContent="space-evenly" mt="14vh">
+        <Box flexDirection="column">
+          <Typography variant="subtitle2">
           Created by
-          {" "}
-          <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
-        </Typography>
-        <Typography variant="subtitle2">
-          <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
             {" "}
+            <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
+          </Typography>
+          <Typography variant="subtitle2">
+            <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
+              {" "}
             Make a suggestion
-            {" "}
-          </OutLink>
-        </Typography>
-        <Typography variant="subtitle2">
-          <OutLink href="https://github.com/rguan72/codenames">
-            {" "}
+              {" "}
+            </OutLink>
+          </Typography>
+          <Typography variant="subtitle2">
+            <OutLink href="https://github.com/rguan72/codenames">
+              {" "}
             View on GitHub
-            {" "}
-          </OutLink>
-        </Typography>
+              {" "}
+            </OutLink>
+          </Typography>
+        </Box>
+        <Box className={classes.min70} />
       </Box>
     </div>
   );
