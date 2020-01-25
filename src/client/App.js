@@ -6,6 +6,9 @@ import Operative from "./Operative";
 import Spymaster from "./Spymaster";
 import End from "./End";
 import Join from "./Join";
+import CreateNameForm from "./CreateNameForm";
+import JoinNameForm from "./JoinNameForm";
+
 import "./app.css";
 
 export default function App() {
@@ -13,6 +16,8 @@ export default function App() {
     <div>
       <HashRouter>
         <Route exact path="/" component={Home} />
+        <Route path="/name/create" component={CreateNameForm} />
+        <Route path="/name/join/:code" component={JoinNameForm} />
         <Route path="/lobby/:code/:id" component={Lobby} />
         <Route path="/operative/:code/:id" component={Operative} />
         <Route path="/spymaster/:code/:id" component={Spymaster} />

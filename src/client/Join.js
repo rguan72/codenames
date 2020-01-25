@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import TopBar from "./components/topbar";
 import {
-  addPlayer, checkValid, genID, getPlayerRef, setRemoteGame
+  checkValid
 } from "./utils";
-import { logJoinGame, logRejoinGame } from "./analytics";
 
 const useStyles = makeStyles({
   mar: {
@@ -25,68 +25,57 @@ const useStyles = makeStyles({
   },
   noMarRight: {
     marginRight: 0
+  },
+  noDecor: {
+    textDecoration: "none"
   }
 });
 
-export default function Join({ location }) {
+export default function Join() {
   const [code, setCode] = useState("INVALIDFILLER");
   const [valid, setValid] = useState(false);
-  const [done, setDone] = useState(false);
-  const [pid, setPID] = useState("");
-  let name;
-
-  if (location.name) name = location.name;
-  else name = sessionStorage.getItem("name");
   const classes = useStyles();
 
-  return !done ? (
+  return (
     <div>
       <TopBar />
-      <Typography variant="h3" className={classes.mar}>
-        {" "}
-        Welcome,
-        {" "}
-        {name}
-      </Typography>
-      <TextField
-        autoComplete="off"
-        inputProps={{
-          autoCapitalize: "none"
-        }}
-        label="Game Code"
-        className={`${classes.mar} ${classes.marTop} ${classes.noMarRight} ${classes.marBotZero}`}
-        onChange={event => {
-          const formVal = event.target.value;
-          if (formVal.length === 4) {
-            checkValid(formVal).then(validity => setValid(validity));
-            setCode(formVal);
-          } else setValid(false);
-        }}
-      />
-      <Button
-        variant="contained"
-        size="large"
-        className={classes.marTop}
-        disabled={!valid}
-        onClick={async () => {
-          const query = await getPlayerRef(code, name);
-          if (query.size > 0) {
-            logRejoinGame();
-            setRemoteGame(code, { started: false });
-            setPID(query.docs[0].id);
-            setDone(true);
-          } else {
-            logJoinGame();
-            const id = genID();
-            addPlayer(code, id, name);
-            setPID(id);
-            setDone(true);
-          }
-        }}
-      >
-        Join
-      </Button>
-      { !valid && <Typography variant="h6" className={`${classes.mar} ${classes.marTopSm}`}> Game Code does not exist </Typography> }
+      <Box mt="15vh">
+        <TextField
+          autoComplete="off"
+          inputProps={{
+            autoCapitalize: "none"
+          }}
+          label="Game Code"
+          className={`${classes.mar} ${classes.marTop} ${classes.noMarRight} ${classes.marBotZero}`}
+          onChange={event => {
+            const formVal = event.target.value;
+            if (formVal.length === 4) {
+              setCode(formVal);
+              checkValid(formVal).then(validity => setValid(validity));
+            } else setValid(false);
+          }}
+        />
+        <Link to={`/name/join/${code}`} className={classes.noDecor} onClick={(e) => { if (!valid) e.preventDefault(); }}>
+          <Button
+            variant="contained"
+            size="large"
+            className={classes.marTop}
+            disabled={!valid}
+          >
+          Next
+          </Button>
+        </Link>
+        {!valid && (
+        <Typography
+          variant="h6"
+          className={`${classes.mar} ${classes.marTopSm}`}
+        >
+          {" "}
+          Game Code does not exist
+          {" "}
+        </Typography>
+        )}
+      </Box>
     </div>
-  ) : <Redirect to={{ pathname: `/lobby/${code}/${pid}`, name }} />;
+  );
 }
