@@ -41,10 +41,10 @@ export default function Lobby(props) {
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
   const { id, code } = props.match.params;
-  let playerName;
+  let name;
 
-  if (props.location.name) playerName = props.location.name;
-  else playerName = sessionStorage.getItem("name");
+  if (props.location.name) name = props.location.name;
+  else name = sessionStorage.getItem("name");
 
   useEffect(() => {
     const unsubscribe = monitorPlayers(code, setPlayers);
@@ -111,7 +111,7 @@ export default function Lobby(props) {
     </Box>
   ));
 
-  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, playerName } }} />;
+  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} />;
 
   return (
     <div>
@@ -169,7 +169,7 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, playerName } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
+        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
           <Button disabled={!allReady} variant="contained">Start</Button>
         </Link>
       </Box>

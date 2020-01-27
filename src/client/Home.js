@@ -1,132 +1,77 @@
-import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import OutLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TopBar from "./components/topbar";
-import {
-  createGame, genCode, genID, redTurn, addWords, createPlayer, addPlayerToGame
-} from "./utils";
-import { logNewGame } from "./analytics";
 
 const useStyles = makeStyles(() => ({
-  bar: {
-    padding: 10,
-    margin: 0,
-    flexGrow: 1,
-    maxWidth: 10,
-    textDecoration: "none",
-  },
   button: {
     marginTop: 20,
     marginLeft: 30
   },
-  field: {
-    marginTop: 200,
-    marginLeft: 30
-  },
-  left30: {
-    marginLeft: 30
-  },
   noDecor: {
     textDecoration: "none"
+  },
+  min70: {
+    minWidth: 70
   }
 }));
 
-
 export default function Home() {
-  const [name, setName] = useState(sessionStorage.getItem("name") || "");
-  const [code, setCode] = useState("");
-  const [pid, setPID] = useState("");
-  const [done, setDone] = useState(false);
-  const props = { name };
-  const classes = useStyles(props);
+  const classes = useStyles();
 
-  useEffect(() => {
-    sessionStorage.setItem("name", name);
-  }, [name]);
-
-  return !done ? (
+  return (
     <div>
       <TopBar />
-      <TextField
-        id="outlined-basic"
-        label="Name"
-        size="medium"
-        value={name}
-        className={classes.field}
-        onChange={event => {
-          setName(event.target.value);
-        }}
-      />
-      <Box flexDirection="row">
-        <Button
-          variant="contained"
-          size="large"
-          onClick={() => {
-            logNewGame();
-            const gameCode = genCode();
-            const id = genID();
-            const isRedTurn = redTurn();
-            createPlayer(gameCode, id, name);
-            createGame(gameCode, isRedTurn).then(() => {
-              addWords(gameCode, isRedTurn);
-              addPlayerToGame(gameCode, id);
-            });
-            setCode(gameCode);
-            setPID(id);
-            setDone(true);
-          }}
-          className={classes.button}
-          disabled={name === ""}
-        >
-          New Game
-        </Button>
-        <Link to={{ pathname: "/join", name }} className={classes.noDecor} onClick={e => { if (name === "") e.preventDefault(); }}>
-          <Button
-            variant="contained"
-            size="large"
-            className={classes.button}
-            disabled={name === ""}
-          >
+      <Box
+        display="flex"
+        justifyContent="space-evenly"
+        alignItems="center"
+        mt={14}
+      >
+        <FontAwesomeIcon icon="brain" size="7x" color="#7c134d" />
+        <FontAwesomeIcon icon="user-secret" size="7x" color="#7c134d" />
+      </Box>
+      <Box display="flex" justifyContent="space-evenly" mt={14}>
+        <Link to={{ pathname: "/join" }} className={classes.noDecor}>
+          <Button variant="contained" size="large" className={classes.button}>
             Join Game
           </Button>
         </Link>
+        <Link to="/name/create" className={classes.noDecor}>
+          <Button variant="contained" size="large" className={classes.button}>
+            New Game
+          </Button>
+        </Link>
       </Box>
-      {name === "" && (
-        <Typography
-          variant="h6"
-          className={`${classes.left30} ${classes.nonamehide}`}
-        >
-          Please set your name!
-        </Typography>
-      )}
-      <Box display="flex" flexDirection="column" ml={3.5} mt={35}>
-        <Typography variant="subtitle2">
+      <Box display="flex" justifyContent="space-evenly" mt="14vh">
+        <Box flexDirection="column">
+          <Typography variant="subtitle2">
           Created by
-          {" "}
-          <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
-        </Typography>
-        <Typography variant="subtitle2">
-          <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
             {" "}
+            <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
+          </Typography>
+          <Typography variant="subtitle2">
+            <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
+              {" "}
             Make a suggestion
-            {" "}
-          </OutLink>
-        </Typography>
-        <Typography variant="subtitle2">
-          <OutLink href="https://github.com/rguan72/codenames">
-            {" "}
+              {" "}
+            </OutLink>
+          </Typography>
+          <Typography variant="subtitle2">
+            <OutLink href="https://github.com/rguan72/codenames">
+              {" "}
             View on GitHub
-            {" "}
-          </OutLink>
-        </Typography>
+              {" "}
+            </OutLink>
+          </Typography>
+        </Box>
+        <Box className={classes.min70} />
       </Box>
     </div>
-  ) : (
-    <Redirect to={{ pathname: `/lobby/${code}/${pid}`, name }} />
   );
 }
