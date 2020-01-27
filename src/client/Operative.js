@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -23,6 +23,9 @@ const useStyles = makeStyles({
   },
   marR: {
     marginRight: 15
+  },
+  nooutline: {
+    outline: "none !important"
   }
 });
 
@@ -173,7 +176,7 @@ export default function Operative(props) {
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
         <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>
       </Box>
-      <Slider {...settings} ref={slider}>
+      <Slider {...settings} ref={slider} className={classes.nooutline}>
         {boardItems}
       </Slider>
     </div>
