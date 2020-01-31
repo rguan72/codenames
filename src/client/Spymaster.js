@@ -65,18 +65,21 @@ export default function Spymaster(props) {
     );
   }
 
-  const turnString = ((game.redTurn && team === teams.RED) || (!game.redTurn && team === teams.BLUE)) ? "Your Turn" : "Their Turn";
+  const turnString = ((game.redTurn && team === teams.RED) || (!game.redTurn && team === teams.BLUE)) ? "Your Turn" : "Opponent Turn";
 
   return (
     <div>
       <TopBar />
-      <Box display="flex" justifyContent="center" mt={2}>
-        <FontAwesomeIcon icon="brain" color={team} size="2x" />
-        <Box m={1} mt={0}>
-          <Typography variant="h6">
-            {turnString}
-          </Typography>
+      <Box mt=".8vh" display="flex" justifyContent="center">
+        <Typography variant="h4">
+          {turnString}
+        </Typography>
+      </Box>
+      <Box display="flex" justifyContent="center" mt={0.7}>
+        <Box mr="3vw">
+          <Typography variant="h6"> You are: </Typography>
         </Box>
+        <FontAwesomeIcon icon="brain" color={team} size="2x" />
       </Box>
       <Box display="flex" justifyContent="center">
         <Box m={2}>
