@@ -10,8 +10,12 @@ import TopBar from "./components/topbar";
 
 const useStyles = makeStyles(() => ({
   button: {
-    marginTop: 20,
-    marginLeft: 30
+    marginTop: "14vh",
+  },
+  textSection: {
+    marginTop: "12vh",
+    position: "relative",
+    left: "3vw"
   },
   noDecor: {
     textDecoration: "none"
@@ -27,50 +31,44 @@ export default function Home() {
   return (
     <div>
       <TopBar />
-      <Box
-        display="flex"
-        justifyContent="space-evenly"
-        alignItems="center"
-        mt={14}
-      >
-        <FontAwesomeIcon icon="brain" size="7x" color="#7c134d" />
-        <FontAwesomeIcon icon="user-secret" size="7x" color="#7c134d" />
-      </Box>
-      <Box display="flex" justifyContent="space-evenly" mt={14}>
-        <Link to={{ pathname: "/join" }} className={classes.noDecor}>
-          <Button variant="contained" size="large" className={classes.button}>
+      <Box display="flex" justifyContent="space-around" mt="13vh">
+        <Box display="flex" flexDirection="column" justifyContent="space-evenly" alignItems="center">
+          <FontAwesomeIcon icon="brain" size="7x" color="#7c134d" />
+          <Link to={{ pathname: "/join" }} className={classes.noDecor}>
+            <Button variant="contained" size="large" className={classes.button}>
             Join Game
-          </Button>
-        </Link>
-        <Link to="/name/create" className={classes.noDecor}>
-          <Button variant="contained" size="large" className={classes.button}>
-            New Game
-          </Button>
-        </Link>
-      </Box>
-      <Box display="flex" justifyContent="space-evenly" mt="14vh">
-        <Box flexDirection="column">
-          <Typography variant="subtitle2">
-          Created by
-            {" "}
-            <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
-          </Typography>
-          <Typography variant="subtitle2">
-            <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
-              {" "}
-            Make a suggestion
-              {" "}
-            </OutLink>
-          </Typography>
-          <Typography variant="subtitle2">
-            <OutLink href="https://github.com/rguan72/codenames">
-              {" "}
-            View on GitHub
-              {" "}
-            </OutLink>
-          </Typography>
+            </Button>
+          </Link>
         </Box>
-        <Box className={classes.min70} />
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <FontAwesomeIcon icon="user-secret" size="7x" color="#7c134d" />
+          <Link to="/name/create" className={classes.noDecor}>
+            <Button variant="contained" size="large" className={classes.button}>
+                New Game
+            </Button>
+          </Link>
+        </Box>
+      </Box>
+      <Box display="flex" flexDirection="column" alignItems="center" mt="20vh">
+        <Typography variant="subtitle2">
+          Created by
+          {" "}
+          <OutLink href="https://richardguan.me"> Richard Guan </OutLink>
+        </Typography>
+        <Typography variant="subtitle2">
+          <OutLink href="https://forms.gle/R14RCRm8mnCBWGuC6">
+            {" "}
+            Make a suggestion
+            {" "}
+          </OutLink>
+        </Typography>
+        <Typography variant="subtitle2">
+          <OutLink href="https://github.com/rguan72/codenames">
+            {" "}
+            View on GitHub
+            {" "}
+          </OutLink>
+        </Typography>
       </Box>
     </div>
   );
