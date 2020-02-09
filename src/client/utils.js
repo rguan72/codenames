@@ -1,6 +1,5 @@
 import firebase from "firebase/app";
 import firebase_ from "./Firebase";
-import { wordList } from "./wordList";
 import { teams, roles } from "./constants";
 
 
@@ -65,7 +64,7 @@ function addPlayer(gameCode, id, name, opts) {
   return Promise.all(promises);
 }
 
-function addWords(gameCode, isRedTurn) {
+function addWords(gameCode, isRedTurn, wordList) {
   const arr = [];
   while (arr.length < 20) {
     const idx = Math.floor(Math.random() * wordList.length);

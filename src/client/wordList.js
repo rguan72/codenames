@@ -1,4 +1,4 @@
-const wordList = [
+const standard = [
   "Acne",
   "Acre",
   "Aircraft",
@@ -595,7 +595,6 @@ const wordList = [
   "Sweater",
   "Swimming",
   "Swing",
-  "Tachometer",
   "Talk",
   "Taxi",
   "Teacher",
@@ -674,4 +673,30 @@ const wordList = [
   "Zoo",
 ];
 
-export { wordList };
+const valentine = [
+  "Valentine",
+  "Heart",
+  "Love",
+  "Friendship",
+  "Chocolate",
+  "Teddy Bear",
+  "Romance",
+  "Cupid",
+  "Arrow",
+  "Venus",
+  "Kiss",
+  "Hug",
+  "Candlelight",
+  "Infatuation",
+  "Dinner",
+  "Poem",
+  "Candy",
+  "Angel",
+  "Rose",
+  "Desire",
+  "Sweetheart",
+  "Suitor",
+  "Tulip",
+];
+
+export default { standard, valentine };

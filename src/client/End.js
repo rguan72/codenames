@@ -10,6 +10,7 @@ import {
   getGameRef, createGame, addPlayer, genID, redTurn, addWords
 } from "./utils";
 import { logGameCompleted, logPlayAgain } from "./analytics";
+import wordList from "./wordList";
 
 const useStyles = makeStyles({
   marL1: {
@@ -49,7 +50,7 @@ export default function End({ location, match }) {
         if (!nextRef.exists) {
           const isRedTurn = redTurn();
           createGame(data.nextCode, isRedTurn);
-          addWords(data.nextCode, isRedTurn);
+          addWords(data.nextCode, isRedTurn, wordList.valentine);
           logGameCompleted();
         }
       }
