@@ -12,6 +12,7 @@ import {
   addPlayerToGame,
 } from "./utils";
 import { logNewGame } from "./analytics";
+import wordList from "./wordList";
 
 export default function CreateNameForm() {
   const [name, setName] = useState(sessionStorage.getItem("name") || "");
@@ -30,7 +31,7 @@ export default function CreateNameForm() {
     const isRedTurn = redTurn();
     createPlayer(gameCode, id, name);
     createGame(gameCode, isRedTurn).then(() => {
-      addWords(gameCode, isRedTurn);
+      addWords(gameCode, isRedTurn, wordList.valentine);
       addPlayerToGame(gameCode, id);
     });
     setCode(gameCode);
