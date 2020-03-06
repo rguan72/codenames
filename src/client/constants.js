@@ -1,6 +1,6 @@
 const teams = {
   RED: "red",
-  BLUE: "blue",
+  BLUE: "blue"
 };
 
 const types = {
@@ -15,4 +15,12 @@ const roles = {
   OPERATIVE: "operative"
 };
 
-export { teams, roles, types };
+const wordPacks = {
+  CLASSIC: "classic",
+  VALENTINE: "valentine",
+  EECS: "eecs"
+};
+
+export {
+  teams, roles, types, wordPacks
+};

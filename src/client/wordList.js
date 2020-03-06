@@ -1,4 +1,4 @@
-const standard = [
+const classic = [
   "Acne",
   "Acre",
   "Aircraft",
@@ -670,7 +670,7 @@ const standard = [
   "Zero",
   "Zipper",
   "Zone",
-  "Zoo",
+  "Zoo"
 ];
 
 const valentine = [
@@ -696,7 +696,7 @@ const valentine = [
   "Desire",
   "Sweetheart",
   "Suitor",
-  "Tulip",
+  "Tulip"
 ];
 
-export default { standard, valentine };
+export default { classic, valentine };
