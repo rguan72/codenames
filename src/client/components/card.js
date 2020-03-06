@@ -7,7 +7,7 @@ import { types } from "../constants";
 
 const useStyles = makeStyles(() => ({
   center: {
-    textAlign: "center",
+    textAlign: "center"
   },
   mar: {
     margin: 15
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: props => (props.word ? types[props.word.type] : "#ffffff")
   },
   basis: {
-    minHeight: 101.6,
+    minHeight: 101.6
   },
   disabled: {
     backgroundColor: "#e0e0e0",
@@ -28,15 +28,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function GameCard(props) {
-  const {
-    word, disabled, onClick
-  } = props;
+  const { word, disabled, onClick } = props;
   const classes = useStyles(props);
   if (!word) {
     return (
       <Card className={`${classes.mar} ${classes.center}`}>
         <CardActionArea
-          className={disabled ? `${classes.pad} ${classes.disabled}` : `${classes.pad}`}
+          className={
+            disabled ? `${classes.pad} ${classes.disabled}` : `${classes.pad}`
+          }
           onClick={onClick}
           disabled={disabled}
         >
@@ -49,7 +49,9 @@ export default function GameCard(props) {
     return (
       <Card className={`${classes.mar} ${classes.center}`}>
         <CardActionArea
-          className={disabled ? `${classes.pad} ${classes.disabled}` : `${classes.pad}`}
+          className={
+            disabled ? `${classes.pad} ${classes.disabled}` : `${classes.pad}`
+          }
           onClick={onClick}
           disabled={disabled}
         >
@@ -61,8 +63,7 @@ export default function GameCard(props) {
   return (
     <Card className={`${classes.colored} ${classes.basis} ${classes.mar}`}>
       {" "}
-      <Typography variant="h4"> &nbsp; </Typography>
-      {" "}
+      <Typography variant="h4"> &nbsp; </Typography>{" "}
     </Card>
   );
 }

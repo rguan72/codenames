@@ -7,7 +7,12 @@ import Guide from "./components/guide";
 import TopBar from "./components/topbar";
 import PlayAgain from "./components/playAgain";
 import {
-  getGameRef, createGame, addPlayer, genID, redTurn, addWords
+  getGameRef,
+  createGame,
+  addPlayer,
+  genID,
+  redTurn,
+  addWords
 } from "./utils";
 import { logGameCompleted, logPlayAgain } from "./analytics";
 import wordList from "./wordList";
@@ -15,7 +20,7 @@ import wordList from "./wordList";
 const useStyles = makeStyles({
   marL1: {
     marginLeft: 10
-  },
+  }
 });
 
 export default function End({ location, match }) {
@@ -24,7 +29,11 @@ export default function End({ location, match }) {
   const [nextId, setNextId] = useState("");
   const [nextCode, setNextCode] = useState("");
   const classes = useStyles();
-  let words; let win; let name; let team; let role;
+  let words;
+  let win;
+  let name;
+  let team;
+  let role;
   if (!location.state) {
     words = JSON.parse(sessionStorage.getItem("words"));
     win = JSON.parse(sessionStorage.getItem("win"));
@@ -50,7 +59,7 @@ export default function End({ location, match }) {
         if (!nextRef.exists) {
           const isRedTurn = redTurn();
           createGame(data.nextCode, isRedTurn);
-          addWords(data.nextCode, isRedTurn, wordList.valentine);
+          addWords(data.nextCode, isRedTurn, wordList.classic);
           logGameCompleted();
         }
       }
@@ -65,7 +74,13 @@ export default function End({ location, match }) {
         <Typography variant="h3" className={classes.marL1}>
           {statement}
         </Typography>
-        <Box display="flex" justifyContent="center" alignItems="center" ml={2} mb={1}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          ml={2}
+          mb={1}
+        >
           <PlayAgain
             onClick={() => {
               logPlayAgain();
@@ -73,8 +88,7 @@ export default function End({ location, match }) {
               setNextId(newId);
               addPlayer(nextCode, newId, name, { team, role });
               setDone(true);
-            }
-            }
+            }}
           />
         </Box>
       </Box>
@@ -96,9 +110,13 @@ export default function End({ location, match }) {
       </Box>
     </div>
   ) : (
-    <Redirect to={{
-      pathname: `/lobby/${nextCode}/${nextId}`, name, team, role
-    }}
+    <Redirect
+      to={{
+        pathname: `/lobby/${nextCode}/${nextId}`,
+        name,
+        team,
+        role
+      }}
     />
   );
 }

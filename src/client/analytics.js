@@ -24,7 +24,26 @@ function logPlayAgain() {
   firebase_.analytics().logEvent("played_again");
 }
 
+function logClassicWords() {
+  firebase_.analytics().logEvent("classic_words");
+}
+
+function logValentineWords() {
+  firebase_.analytics().logEvent("valentine_words");
+}
+
+function logEECSWords() {
+  firebase_.analytics().logEvent("eecs_words");
+}
 
 export {
-  logNewGame, logJoinGame, logGameStarted, logGameCompleted, logPlayAgain, logRejoinGame
+  logNewGame,
+  logJoinGame,
+  logGameStarted,
+  logGameCompleted,
+  logPlayAgain,
+  logRejoinGame,
+  logClassicWords,
+  logValentineWords,
+  logEECSWords
 };

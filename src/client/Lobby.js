@@ -11,18 +11,26 @@ import firebase from "firebase/app";
 import Player from "./components/player";
 import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
-import { teams, roles } from "./constants";
+import { teams, roles, wordPacks } from "./constants";
 import {
-  monitorPlayers, monitorGame, monitorThisPlayer, setRemoteGame
+  monitorPlayers,
+  monitorGame,
+  monitorThisPlayer,
+  setRemoteGame,
+  addWords,
+  getGameRef
 } from "./utils";
-import { logGameStarted } from "./analytics";
+import wordList from "./wordList";
+import {
+  logGameStarted, logClassicWords, logValentineWords, logEECSWords
+} from "./analytics";
 
 const useStyles = makeStyles(() => ({
   margin: {
     margin: 15
   },
   marginCode: {
-    marginTop: 5,
+    marginTop: 5
   },
   plMargin: {
     margin: 40,
@@ -36,10 +44,15 @@ const useStyles = makeStyles(() => ({
 export default function Lobby(props) {
   const classes = useStyles();
   const [players, setPlayers] = useState([]);
-  const [team, setTeam] = useState(props.location.team ? props.location.team : teams.RED);
-  const [role, setRole] = useState(props.location.role ? props.location.role : roles.SPYMASTER);
+  const [team, setTeam] = useState(
+    props.location.team ? props.location.team : teams.RED
+  );
+  const [role, setRole] = useState(
+    props.location.role ? props.location.role : roles.SPYMASTER
+  );
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
+  const [wordPack, setWordPack] = useState(wordPacks.CLASSIC);
   const { id, code } = props.match.params;
   let name;
 
@@ -88,14 +101,32 @@ export default function Lobby(props) {
     db.collection("players")
       .doc(id)
       .update({ ready: selReady });
-    if (selReady) db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(1) });
-    else db.collection("games").doc(code).update({ numReady: firebase.firestore.FieldValue.increment(-1) });
+    if (selReady) {
+      db.collection("games")
+        .doc(code)
+        .update({ numReady: firebase.firestore.FieldValue.increment(1) });
+    } else {
+      db.collection("games")
+        .doc(code)
+        .update({ numReady: firebase.firestore.FieldValue.increment(-1) });
+    }
+  }
+
+  async function addWordsToGame() {
+    const ref = await getGameRef(code);
+    const data = ref.data();
+    const { isRedTurn } = data;
+    addWords(code, isRedTurn, wordList[wordPack]);
+    if (wordPack === wordList.CLASSIC) { logClassicWords(); } else if (wordPack === wordPacks.VALENTINE) { logValentineWords(); } else if (wordPack === wordPacks.EECS) { logEECSWords(); }
   }
 
   function handleClick(e, areAllReady) {
     if (!areAllReady) e.preventDefault();
-    else setRemoteGame(code, { started: true });
-    logGameStarted();
+    else {
+      setRemoteGame(code, { started: true });
+      addWordsToGame();
+      logGameStarted();
+    }
   }
 
   const allReady = game && game.numPlayers > 0 && game.numReady === game.numPlayers;
@@ -111,7 +142,13 @@ export default function Lobby(props) {
     </Box>
   ));
 
-  if (game && game.started) return <Redirect to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} />;
+  if (game && game.started) {
+    return (
+      <Redirect
+        to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }}
+      />
+    );
+  }
 
   return (
     <div>
@@ -169,8 +206,14 @@ export default function Lobby(props) {
           )}
           label="Ready"
         />
-        <Link to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }} onClick={(e) => handleClick(e, allReady)} style={{ textDecoration: "none" }}>
-          <Button disabled={!allReady} variant="contained">Start</Button>
+        <Link
+          to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }}
+          onClick={e => handleClick(e, allReady)}
+          style={{ textDecoration: "none" }}
+        >
+          <Button disabled={!allReady} variant="contained">
+            Start
+          </Button>
         </Link>
       </Box>
     </div>
