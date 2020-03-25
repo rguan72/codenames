@@ -21,6 +21,10 @@ const wordPacks = {
   EECS: "eecs"
 };
 
+const keyCodes = {
+  ENTER: 13
+};
+
 export {
-  teams, roles, types, wordPacks
+  teams, roles, types, wordPacks, keyCodes
 };
