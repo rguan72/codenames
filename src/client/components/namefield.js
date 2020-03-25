@@ -11,11 +11,11 @@ const useStyles = makeStyles(() => ({
     marginLeft: 30
   },
   field: {
-    marginTop: 150,
-    marginLeft: 40
+    marginTop: 140,
+    marginLeft: "10vw"
   },
   left40: {
-    marginLeft: 40
+    marginLeft: "10vw"
   },
   noDecor: {
     textDecoration: "none"
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function NameField({
-  onClick, buttonLabel, name, setName
+  onClick, onEnter, buttonLabel, name, setName, disabled
 }) {
   const classes = useStyles();
   return (
@@ -38,6 +38,7 @@ export default function NameField({
           size="medium"
           value={name}
           className={classes.field}
+          onKeyDown={(e) => onEnter(e)}
           onChange={event => {
             setName(event.target.value);
           }}
@@ -47,7 +48,7 @@ export default function NameField({
           size="large"
           onClick={onClick}
           className={`${classes.field} ${classes.noLeft}`}
-          disabled={name === ""}
+          disabled={disabled}
         >
           {buttonLabel}
         </Button>

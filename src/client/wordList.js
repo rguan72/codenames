@@ -699,4 +699,43 @@ const valentine = [
   "Tulip"
 ];
 
-export default { classic, valentine };
+const eecs = [
+  "Computer",
+  "Keyboard",
+  "Testing",
+  "Software",
+  "Smartphone",
+  "App",
+  "Web",
+  "Assembly",
+  "Programming",
+  "Language",
+  "Mathematics",
+  "Theory",
+  "Computation",
+  "Internship",
+  "Technology",
+  "Robots",
+  "Website",
+  "Operating System",
+  "Back end",
+  "Front end",
+  "Mobile",
+  "Development",
+  "Engineering",
+  "Optimization",
+  "Machine Learning",
+  "Deep Learning",
+  "Buzzwords",
+  "Cryptocurrency",
+  "Bitcoin",
+  "Blockchain",
+  "Hacking",
+  "Cybersecurity",
+  "Internet",
+  "Company",
+  "Algorithm",
+  "Data"
+];
+
+export default { classic, valentine, eecs };
