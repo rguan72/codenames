@@ -29,9 +29,10 @@ export default function JoinNameForm(props) {
   async function joinGameClick() {
     setDisabled(true);
     const query = await getPlayerRef(code, name);
+    await setRemoteGame(code, { started: false });
     if (query.size > 0) {
       logRejoinGame();
-      setRemoteGame(code, { started: false }).then(() => { setDisabled(false); });
+      setDisabled(false);
       setPID(query.docs[0].id);
       setDone(true);
     } else {

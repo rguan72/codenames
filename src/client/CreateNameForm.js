@@ -8,15 +8,20 @@ import {
   genCode,
   genID,
   redTurn,
-  addPlayerToGame
+  addPlayerToGame,
+  addWords
 } from "./utils";
-import { logNewGame } from "./analytics";
-import { keyCodes } from "./constants";
+import wordList from "./wordList";
+import {
+  logNewGame, logClassicWords, logValentineWords, logEECSWords
+} from "./analytics";
+import { keyCodes, wordPacks } from "./constants";
 
 export default function CreateNameForm() {
   const [name, setName] = useState(sessionStorage.getItem("name") || "");
   const [code, setCode] = useState("");
   const [pid, setPID] = useState("");
+  const [wordPack, setWordPack] = useState(wordPacks.CLASSIC);
   const [disabled, setDisabled] = useState(true);
   const [done, setDone] = useState(false);
 
@@ -35,7 +40,11 @@ export default function CreateNameForm() {
     const id = genID();
     const isRedTurn = redTurn();
     createPlayer(gameCode, id, name);
-    createGame(gameCode, isRedTurn).then(() => addPlayerToGame(gameCode, id)).then(() => { if (!done) { setDisabled(false); } });
+    createGame(gameCode, isRedTurn).then(() => {
+      addWords(gameCode, isRedTurn, wordList[wordPack]);
+      addPlayerToGame(gameCode, id).then(() => { if (!done) { setDisabled(false); } });
+      if (wordPack === wordList.CLASSIC) { logClassicWords(); } else if (wordPack === wordPacks.VALENTINE) { logValentineWords(); } else if (wordPack === wordPacks.EECS) { logEECSWords(); }
+    });
     setCode(gameCode);
     setPID(id);
     setDone(true);

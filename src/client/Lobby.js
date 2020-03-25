@@ -11,18 +11,15 @@ import firebase from "firebase/app";
 import Player from "./components/player";
 import TopBar from "./components/topbar";
 import firebase_ from "./Firebase";
-import { teams, roles, wordPacks } from "./constants";
+import { teams, roles } from "./constants";
 import {
   monitorPlayers,
   monitorGame,
   monitorThisPlayer,
   setRemoteGame,
-  addWords,
-  getGameRef
 } from "./utils";
-import wordList from "./wordList";
 import {
-  logGameStarted, logClassicWords, logValentineWords, logEECSWords
+  logGameStarted
 } from "./analytics";
 
 const useStyles = makeStyles(() => ({
@@ -52,7 +49,6 @@ export default function Lobby(props) {
   );
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
-  const [wordPack, setWordPack] = useState(wordPacks.CLASSIC);
   const { id, code } = props.match.params;
   let name;
 
@@ -112,19 +108,10 @@ export default function Lobby(props) {
     }
   }
 
-  async function addWordsToGame() {
-    const ref = await getGameRef(code);
-    const data = ref.data();
-    const { isRedTurn } = data;
-    addWords(code, isRedTurn, wordList[wordPack]);
-    if (wordPack === wordList.CLASSIC) { logClassicWords(); } else if (wordPack === wordPacks.VALENTINE) { logValentineWords(); } else if (wordPack === wordPacks.EECS) { logEECSWords(); }
-  }
-
   function handleClick(e, areAllReady) {
     if (!areAllReady) e.preventDefault();
     else {
       setRemoteGame(code, { started: true });
-      addWordsToGame();
       logGameStarted();
     }
   }
