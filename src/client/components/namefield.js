@@ -11,11 +11,11 @@ const useStyles = makeStyles(() => ({
     marginLeft: 30
   },
   field: {
-    marginTop: 150,
-    marginLeft: 40
+    marginTop: 140,
+    marginLeft: "10vw"
   },
   left40: {
-    marginLeft: 40
+    marginLeft: "10vw"
   },
   noDecor: {
     textDecoration: "none"

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
+import NativeSelect from "@material-ui/core/NativeSelect";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 import TopBar from "./components/topbar";
 import NameField from "./components/namefield";
 import {
@@ -56,17 +59,40 @@ export default function CreateNameForm() {
     }
   }
 
+  const handleSelectChange = event => {
+    setWordPack(event.target.value);
+  };
+
   return !done ? (
     <div>
       <TopBar />
-      <NameField
-        name={name}
-        setName={setName}
-        buttonLabel="Create"
-        onClick={newGameClick}
-        onEnter={onEnter}
-        disabled={disabled}
-      />
+      <Box display="block">
+        <NameField
+          name={name}
+          setName={setName}
+          buttonLabel="Create"
+          onClick={newGameClick}
+          onEnter={onEnter}
+          disabled={disabled}
+        />
+      </Box>
+      <Box ml="10vw" mt="6vh">
+        <NativeSelect
+          value={wordPack}
+          onChange={handleSelectChange}
+        >
+          <option value={wordPacks.CLASSIC}>
+            {wordPacks.CLASSIC}
+          </option>
+          <option value={wordPacks.VALENTINE}>
+            {wordPacks.VALENTINE}
+          </option>
+          <option value={wordPacks.EECS}>
+            {wordPacks.EECS}
+          </option>
+        </NativeSelect>
+        <Typography variant="h6"> Select Word Pack </Typography>
+      </Box>
     </div>
   ) : (
     <Redirect to={{ pathname: `/lobby/${code}/${pid}`, name }} />
