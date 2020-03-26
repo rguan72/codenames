@@ -3,9 +3,6 @@ import { Redirect } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase/app";
 import GameCard from "./components/card";
@@ -42,7 +39,6 @@ export default function Operative(props) {
     team = props.location.state.team;
     name = props.location.state.name;
   }
-  const slider = React.createRef();
   const classes = useStyles();
   const myTurn = (team === teams.RED && game.redTurn) || (team === teams.BLUE && !game.redTurn);
 
@@ -111,7 +107,7 @@ export default function Operative(props) {
 
   function renderCard(i) {
     return (
-      <Box mb={((i % 4) === 3) ? 0.3 : 4.5}>
+      <Box mb="1.2vh" width="50vw">
         <GameCard
           word={words[i]}
           disabled={!myTurn}
@@ -122,28 +118,14 @@ export default function Operative(props) {
   }
 
   const boardItems = [];
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < 20; i += 2) {
     boardItems.push(
-      <Box key={i}>
-        {renderCard(4 * i)}
-        {renderCard(4 * i + 1)}
-        {renderCard(4 * i + 2)}
-        {renderCard(4 * i + 3)}
-        <Box display="flex" justifyContent="space-between">
-          <FontAwesomeIcon icon="arrow-left" size="2x" className={classes.marL} onClick={() => { slider.current.slickPrev(); }} />
-          <FontAwesomeIcon icon="arrow-right" size="2x" className={classes.marR} onClick={() => { slider.current.slickNext(); }} />
-        </Box>
+      <Box display="flex" key={i}>
+        {renderCard(i)}
+        {renderCard(i + 1)}
       </Box>
     );
   }
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
   if (game.winner && team === game.winner) {
     sessionStorage.setItem("win", true);
     return (
@@ -172,13 +154,11 @@ export default function Operative(props) {
   return (
     <div>
       <TopBar />
-      <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+      <Box display="flex" justifyContent="center" alignItems="center" mt="4vh" mb="2vh">
         <FontAwesomeIcon icon="user-secret" color={team} size="2x" />
         <Button variant="contained" disabled={!myTurn} onClick={endTurn} className={classes.mar} size="large"> End Turn </Button>
       </Box>
-      <Slider {...settings} ref={slider} className={classes.nooutline}>
-        {boardItems}
-      </Slider>
+      {boardItems}
     </div>
   );
 }

@@ -10,16 +10,16 @@ const useStyles = makeStyles(() => ({
     textAlign: "center"
   },
   mar: {
-    margin: 15
+    margin: 3
   },
   pad: {
-    padding: 30
+    padding: 10
   },
   colored: {
     backgroundColor: props => (props.word ? types[props.word.type] : "#ffffff")
   },
   basis: {
-    minHeight: 101.6
+    minHeight: 50.6,
   },
   disabled: {
     backgroundColor: "#e0e0e0",
@@ -30,6 +30,7 @@ const useStyles = makeStyles(() => ({
 export default function GameCard(props) {
   const { word, disabled, onClick } = props;
   const classes = useStyles(props);
+  const cardSize = "h6";
   if (!word) {
     return (
       <Card className={`${classes.mar} ${classes.center}`}>
@@ -40,7 +41,7 @@ export default function GameCard(props) {
           onClick={onClick}
           disabled={disabled}
         >
-          <Typography variant="h4" />
+          <Typography variant={cardSize} />
         </CardActionArea>
       </Card>
     );
@@ -55,7 +56,7 @@ export default function GameCard(props) {
           onClick={onClick}
           disabled={disabled}
         >
-          <Typography variant="h4">{word ? word.value : ""}</Typography>
+          <Typography variant={cardSize}>{word ? word.value : ""}</Typography>
         </CardActionArea>
       </Card>
     );
@@ -63,7 +64,8 @@ export default function GameCard(props) {
   return (
     <Card className={`${classes.colored} ${classes.basis} ${classes.mar}`}>
       {" "}
-      <Typography variant="h4"> &nbsp; </Typography>{" "}
+      <Typography variant={cardSize}> &nbsp; </Typography>
+      {" "}
     </Card>
   );
 }
