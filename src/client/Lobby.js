@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Snackbar from "@material-ui/core/Snackbar";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import firebase from "firebase/app";
 import Player from "./components/player";
 import TopBar from "./components/topbar";
@@ -35,6 +39,9 @@ const useStyles = makeStyles(() => ({
   },
   marginSub: {
     marginLeft: 15
+  },
+  negMargin: {
+    marginTop: "-.4vh"
   }
 }));
 
@@ -49,6 +56,7 @@ export default function Lobby(props) {
   );
   const [ready, setReady] = useState(false);
   const [game, setGame] = useState({});
+  const [open, setOpen] = useState(false);
   const { id, code } = props.match.params;
   let name;
 
@@ -140,16 +148,26 @@ export default function Lobby(props) {
   return (
     <div>
       <TopBar />
-      <Box display="flex" mb={-2}>
-        <Typography variant="h4" className={classes.margin}>
-          Game Code:
-        </Typography>
-        <Typography variant="h3" className={classes.marginCode}>
-          {code}
-        </Typography>
-      </Box>
-      <Box ml={2} mb={4}>
-        <Typography variant="subtitle1"> Waiting for players... </Typography>
+      <Box display="flex" justifyContent="space-evenly" mb="2vh">
+        <Box display="flex" flexDirection="column" m={3}>
+          <Typography variant="h5">
+            Game Code:
+            {" "}
+            {code}
+          </Typography>
+          <Typography variant="subtitle2"> Waiting for players... </Typography>
+        </Box>
+
+        <Box display="flex" flexDirection="column" m={2}>
+          <CopyToClipboard
+            text={`${window.location.origin}/#/name/join/${code}`}
+          >
+            <IconButton onClick={() => setOpen(true)}>
+              <FileCopyIcon fontSize="large" />
+            </IconButton>
+          </CopyToClipboard>
+          <Typography variant="caption" className={classes.negMargin}> Copy Invite Link </Typography>
+        </Box>
       </Box>
       <Box display="flex" flexWrap="wrap" justifyContent="space-around">
         {playerItems}
@@ -157,7 +175,7 @@ export default function Lobby(props) {
       <Box display="flex" m={4} justifyContent="center">
         <NativeSelect
           value={team}
-          onChange={event => {
+          onChange={(event) => {
             setTeam(event.target.value);
             setPlayerTeam(event.target.value);
           }}
@@ -168,7 +186,7 @@ export default function Lobby(props) {
         </NativeSelect>
         <NativeSelect
           value={role}
-          onChange={event => {
+          onChange={(event) => {
             setRole(event.target.value);
             setPlayerRole(event.target.value);
           }}
@@ -183,7 +201,7 @@ export default function Lobby(props) {
           control={(
             <Switch
               checked={ready}
-              onChange={event => {
+              onChange={(event) => {
                 setReady(event.target.checked);
                 setPlayerReady(event.target.checked);
               }}
@@ -195,13 +213,19 @@ export default function Lobby(props) {
         />
         <Link
           to={{ pathname: `/${role}/${code}/${id}`, state: { team, name } }}
-          onClick={e => handleClick(e, allReady)}
+          onClick={(e) => handleClick(e, allReady)}
           style={{ textDecoration: "none" }}
         >
           <Button disabled={!allReady} variant="contained">
             Start
           </Button>
         </Link>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={open}
+          onClose={() => setOpen(false)}
+          message="Copied"
+        />
       </Box>
     </div>
   );
