@@ -1,6 +1,6 @@
 # Codenames
 
-The basic structure of this project was baesd on boilerplate to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel. Full credit for boilerplate and documentation goes to https://github.com/crsandeep.
+Basic structure of this project was based on boilerplate to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel. Full credit for boilerplate and documentation goes to https://github.com/crsandeep.
 
 - [simple-react-full-stack](#simple-react-full-stack)
   - [Introduction](#introduction)
