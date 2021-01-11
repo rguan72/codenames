@@ -1,5 +1,5 @@
 # Codenames
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cf58ed46-4a2f-4333-a028-c8dc40bcdf35/deploy-status)](https://app.netlify.com/sites/vigorous-goldberg-74d138/deploys)
 Basic structure of this project was based on boilerplate to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel. Full credit for boilerplate and documentation goes to https://github.com/crsandeep.
 
 - [simple-react-full-stack](#simple-react-full-stack)
